@@ -46,8 +46,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
 extension ViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let videoURL = info[.mediaURL] as? URL {
-            let editorVC = EditorViewController()
-            editorVC.videoURL = videoURL
+            let editorVC = EditorViewController(videoURL: videoURL)
             
             self.navigationController?.pushViewController(editorVC, animated: true)
         }

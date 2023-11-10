@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum PlayerState {
+enum PlayerButtonState {
     case play
     case pause
     case unknown // if player is not ready to play
@@ -15,9 +15,12 @@ enum PlayerState {
     // tap will switch the state of the player
     mutating func tap() {
         switch self {
-        case .play: self = .pause
-        case .pause: self = .play
-        case .unknown: break
+            case .play:
+                self = .pause
+            case .pause: 
+                self = .play
+            case .unknown: 
+                break
         }
     }
     
@@ -26,12 +29,15 @@ enum PlayerState {
 class PlayerButton: UIButton {
     
     // set the images based on play/pause states of the player
-    var playerState: PlayerState = .unknown {
+    var playerState: PlayerButtonState = .unknown {
         didSet {
             switch self.playerState {
-            case .pause: pause()
-            case .play: play()
-            default: break
+                case .pause: 
+                    pause()
+                case .play: 
+                    play()
+                default: 
+                    break
             }
         }
     }
@@ -43,6 +49,16 @@ class PlayerButton: UIButton {
         }
     }
     
-    func play() { setImage(UIImage(named: "pause_button"), for: .normal) }
-    func pause() { setImage(UIImage(named: "play_button"), for: .normal) }
+    override func target(forAction action: Selector, withSender sender: Any?) -> Any? {
+        playerState.tap()
+    }
+    
+    func play() {
+        setImage(UIImage(named: "pause_button"), for: .normal)
+    }
+    
+    func pause() {
+        setImage(UIImage(named: "play_button"), for: .normal)
+    }
+    
 }
