@@ -12,7 +12,10 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     private lazy var selectMediaButton: UIButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("Select Video", for: .normal)
-        $0.backgroundColor = .blue
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .white
+        $0.titleEdgeInsets = UIEdgeInsets(top: 10,left: 10,bottom: 10,right: 10)
+        $0.layer.cornerRadius = 10.0
         $0.addTarget(self, action: #selector(selectMediaButtonTapped), for: .touchUpInside)
         
         return $0
@@ -29,7 +32,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         
         NSLayoutConstraint.activate([
             selectMediaButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            selectMediaButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            selectMediaButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            selectMediaButton.widthAnchor.constraint(equalToConstant: 150)
         ])
     }
     

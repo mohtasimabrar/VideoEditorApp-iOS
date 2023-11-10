@@ -49,17 +49,38 @@ class EditorViewController: UIViewController {
         return $0
     }(UISlider())
     
+    private lazy var trimTimeLabel: UILabel = {
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        $0.textAlignment = .center
+        $0.numberOfLines = 1
+        $0.textColor = .white
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        
+        return $0
+    }(UILabel())
+    
+    private lazy var durationLabel: UILabel = {
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        $0.textAlignment = .center
+        $0.numberOfLines = 1
+        $0.textColor = .white
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        
+        return $0
+    }(UILabel())
+    
     private lazy var playbackTimer: Timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateSlider), userInfo: nil, repeats: true)
     
     var isScrubbing: Bool = false
     
     var videoURL: URL
     var durationOfVideo: Double = 0.0
+    var startOfVideo: Double = 0.0
+    var endOfVideo: Double = 0.0
     
     init(videoURL: URL) {
         self.videoURL = videoURL
         super.init(nibName: nil, bundle: nil)
-        self.durationOfVideo = playerView.player.currentItem?.duration.seconds ?? 0.0
     }
     
     required init?(coder: NSCoder) {
@@ -73,6 +94,8 @@ class EditorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        trimTimeLabel.text = "\(startOfVideo) ~ \(endOfVideo)"
+        durationLabel.text = "Maximum \(durationOfVideo) sec"
         playerButton.isEnabled = false
     }
     
@@ -85,7 +108,7 @@ class EditorViewController: UIViewController {
     }
     
     private func setupView() {
-        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider].forEach { view.addSubview($0) }
+        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider, trimTimeLabel, durationLabel].forEach { view.addSubview($0) }
         
         NSLayoutConstraint.activate([
             endTrimSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
@@ -103,10 +126,20 @@ class EditorViewController: UIViewController {
             timelineSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             timelineSlider.heightAnchor.constraint(equalToConstant: 50),
             
-            playerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            playerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             playerButton.bottomAnchor.constraint(equalTo: timelineSlider.topAnchor, constant: -10),
             playerButton.heightAnchor.constraint(equalToConstant: 50),
             playerButton.widthAnchor.constraint(equalToConstant: 50),
+            
+            trimTimeLabel.topAnchor.constraint(equalTo: playerButton.topAnchor),
+            trimTimeLabel.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor),
+            trimTimeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            trimTimeLabel.heightAnchor.constraint(equalToConstant: 25),
+            
+            durationLabel.topAnchor.constraint(equalTo: trimTimeLabel.bottomAnchor),
+            durationLabel.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor),
+            durationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            durationLabel.bottomAnchor.constraint(equalTo: playerButton.bottomAnchor),
             
             playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -121,6 +154,10 @@ class EditorViewController: UIViewController {
         playerView.playerStateChanged()
     }
     
+    private func setLabels() {
+        trimTimeLabel.text = "\(Double(round(100 * startOfVideo)) / 100)s ~ \(Double(round(100 * endOfVideo)) / 100)s"
+    }
+    
 }
 
 extension EditorViewController: MoviePlayetViewDelegate {
@@ -128,6 +165,10 @@ extension EditorViewController: MoviePlayetViewDelegate {
         self.playerView.playerStateChanged()
         self.playerButton.isEnabled = true
         playbackTimer.fire()
+        self.durationOfVideo = playerView.player.currentItem?.duration.seconds ?? 0.0
+        self.endOfVideo = durationOfVideo
+        setLabels()
+        durationLabel.text = "Maximum \(Double(round(100 * durationOfVideo)) / 100) sec"
     }
 }
 
@@ -154,10 +195,14 @@ extension EditorViewController {
     }
     
     @objc func startTrimSliderValueChanged(_ sender:UISlider) {
+        startOfVideo = Double(sender.value) * durationOfVideo
+        setLabels()
         playerView.trimStart(startTime: Double(sender.value))
     }
     
     @objc func endTrimSliderValueChanged(_ sender:UISlider) {
+        endOfVideo = Double(sender.value) * durationOfVideo
+        setLabels()
         playerView.trimEnd(endTime: Double(sender.value))
     }
     
