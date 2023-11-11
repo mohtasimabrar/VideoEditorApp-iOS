@@ -12,8 +12,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     private lazy var selectMediaButton: UIButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("Select Video", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .white
+        $0.setTitleColor(.white, for: .normal)
+        $0.backgroundColor = .systemPink
         $0.titleEdgeInsets = UIEdgeInsets(top: 10,left: 10,bottom: 10,right: 10)
         $0.layer.cornerRadius = 10.0
         $0.addTarget(self, action: #selector(selectMediaButtonTapped), for: .touchUpInside)
@@ -23,8 +23,20 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Video Editor"
+        view.backgroundColor = .white
         setupView()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.largeTitleDisplayMode = .always
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+//        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     private func setupView() {
@@ -52,10 +64,10 @@ extension ViewController: UIImagePickerControllerDelegate {
         if let videoURL = info[.mediaURL] as? URL {
             let editorVC = EditorViewController(videoURL: videoURL)
             
+            picker.dismiss(animated: true, completion: nil)
             self.navigationController?.pushViewController(editorVC, animated: true)
         }
         
-        picker.dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

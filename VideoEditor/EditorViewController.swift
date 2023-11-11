@@ -18,6 +18,15 @@ class EditorViewController: UIViewController {
         return $0
     }(PlayerButton())
     
+    private lazy var cropButton: UIButton = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setImage(UIImage(systemName: "square.dashed"), for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.addTarget(self, action: #selector(didTapCropButton), for: .touchUpInside)
+        
+        return $0
+    }(UIButton())
+    
     private lazy var playerView: MoviePlayerView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
@@ -36,6 +45,7 @@ class EditorViewController: UIViewController {
     private lazy var startTrimSlider: UISlider = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(self.startTrimSliderValueChanged(_:)), for: .valueChanged)
+        $0.addTarget(self, action: #selector(self.startTrimSliderTouchUp(_:)), for: .touchUpInside)
         
         return $0
     }(UISlider())
@@ -53,7 +63,7 @@ class EditorViewController: UIViewController {
         $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         $0.textAlignment = .center
         $0.numberOfLines = 1
-        $0.textColor = .white
+        $0.textColor = .gray
         $0.translatesAutoresizingMaskIntoConstraints = false
         
         return $0
@@ -63,7 +73,7 @@ class EditorViewController: UIViewController {
         $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         $0.textAlignment = .center
         $0.numberOfLines = 1
-        $0.textColor = .white
+        $0.textColor = .gray
         $0.translatesAutoresizingMaskIntoConstraints = false
         
         return $0
@@ -93,24 +103,31 @@ class EditorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
+        title = "Trim"
         setupView()
         trimTimeLabel.text = "\(startOfVideo) ~ \(endOfVideo)"
         durationLabel.text = "Maximum \(durationOfVideo) sec"
         playerButton.isEnabled = false
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.largeTitleDisplayMode = .never
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         // Stop the video playback
         playerView.player.pause()
         playbackTimer.invalidate()
     }
     
     private func setupView() {
-        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider, trimTimeLabel, durationLabel].forEach { view.addSubview($0) }
+        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider, trimTimeLabel, durationLabel, cropButton].forEach { view.addSubview($0) }
         
         NSLayoutConstraint.activate([
+            
             endTrimSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
             endTrimSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             endTrimSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
@@ -133,15 +150,20 @@ class EditorViewController: UIViewController {
             
             trimTimeLabel.topAnchor.constraint(equalTo: playerButton.topAnchor),
             trimTimeLabel.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor),
-            trimTimeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            trimTimeLabel.trailingAnchor.constraint(equalTo: durationLabel.trailingAnchor),
             trimTimeLabel.heightAnchor.constraint(equalToConstant: 25),
             
             durationLabel.topAnchor.constraint(equalTo: trimTimeLabel.bottomAnchor),
             durationLabel.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor),
-            durationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            durationLabel.trailingAnchor.constraint(equalTo: cropButton.leadingAnchor),
             durationLabel.bottomAnchor.constraint(equalTo: playerButton.bottomAnchor),
             
-            playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            cropButton.topAnchor.constraint(equalTo: playerButton.topAnchor),
+            cropButton.bottomAnchor.constraint(equalTo: playerButton.bottomAnchor),
+            cropButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            cropButton.widthAnchor.constraint(equalToConstant: 50),
+            
+            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerView.bottomAnchor.constraint(equalTo: playerButton.topAnchor, constant: -20),
@@ -152,6 +174,10 @@ class EditorViewController: UIViewController {
     @objc func didTapPlayerButton(_ sender: Any) {
         playerButton.playerState.tap()
         playerView.playerStateChanged()
+    }
+    
+    @objc func didTapCropButton(_sender: Any) {
+        playerView.transformVideo()
     }
     
     private func setLabels() {
@@ -208,5 +234,9 @@ extension EditorViewController {
     
     @objc func endTrimSliderTouchUp(_ sender: UISlider) {
         playerView.setEndTrimTime()
+    }
+    
+    @objc func startTrimSliderTouchUp(_ sender: UISlider) {
+        playerView.play()
     }
 }
