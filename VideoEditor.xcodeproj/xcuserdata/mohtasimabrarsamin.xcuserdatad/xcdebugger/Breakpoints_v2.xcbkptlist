@@ -20,7 +20,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "7C6AE438-AF7F-44F4-AAE4-D2F52B4C7209 - dc1856f3ed978e2b"
+                  uuid = "7C6AE438-AF7F-44F4-AAE4-D2F52B4C7209 - dc1856f3ed978e65"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -30,9 +30,9 @@
                   urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "160"
-                  endingLineNumber = "160"
-                  offsetFromSymbolStart = "100">
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
+                  offsetFromSymbolStart = "32">
                </Location>
                <Location
                   uuid = "7C6AE438-AF7F-44F4-AAE4-D2F52B4C7209 - dc1856f3ed978e65"
@@ -103,17 +103,224 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "552B8AFE-4BB6-4E02-9F30-C6EA00B29F74"
+            uuid = "9941186D-1E2B-4D7D-9C2E-1E55B7695068"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoEditor/MoviePlayerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
             landmarkName = "exportEditedVideo()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9941186D-1E2B-4D7D-9C2E-1E55B7695068 - 3786512cbc46af8f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "196"
+                  endingLineNumber = "196"
+                  offsetFromSymbolStart = "5868">
+               </Location>
+               <Location
+                  uuid = "9941186D-1E2B-4D7D-9C2E-1E55B7695068 - 3786512cbc46af8f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "196"
+                  endingLineNumber = "196"
+                  offsetFromSymbolStart = "6028">
+               </Location>
+               <Location
+                  uuid = "9941186D-1E2B-4D7D-9C2E-1E55B7695068 - 3786512cbc46af8f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "196"
+                  endingLineNumber = "196"
+                  offsetFromSymbolStart = "6012">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0E9A46DD-AB4D-4780-992D-98C674564674"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/MoviePlayerView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
+            landmarkName = "exportEditedVideo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "44FE7DF1-E984-419D-A098-48CA32A52B51"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/MoviePlayerView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "exportEditedVideo()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "44FE7DF1-E984-419D-A098-48CA32A52B51 - 3786512cbc46ace5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "218"
+                  endingLineNumber = "218"
+                  offsetFromSymbolStart = "3272">
+               </Location>
+               <Location
+                  uuid = "44FE7DF1-E984-419D-A098-48CA32A52B51 - 3786512cbc46ace5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "218"
+                  endingLineNumber = "218"
+                  offsetFromSymbolStart = "3264">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D7DD331F-CFB2-46B9-B27F-7CC4AC64932F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/MoviePlayerView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "exportEditedVideo()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D7DD331F-CFB2-46B9-B27F-7CC4AC64932F - 3786512cbc46ab46"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "221"
+                  endingLineNumber = "221"
+                  offsetFromSymbolStart = "3368">
+               </Location>
+               <Location
+                  uuid = "D7DD331F-CFB2-46B9-B27F-7CC4AC64932F - 3786512cbc46ab46"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "221"
+                  endingLineNumber = "221"
+                  offsetFromSymbolStart = "3352">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F1F3EDD5-20D9-426E-B203-34F12B0F1699"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/MoviePlayerView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "exportEditedVideo()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F1F3EDD5-20D9-426E-B203-34F12B0F1699 - 3786512cbc46abaf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "228"
+                  endingLineNumber = "228"
+                  offsetFromSymbolStart = "3664">
+               </Location>
+               <Location
+                  uuid = "F1F3EDD5-20D9-426E-B203-34F12B0F1699 - 3786512cbc46abaf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "228"
+                  endingLineNumber = "228"
+                  offsetFromSymbolStart = "3648">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

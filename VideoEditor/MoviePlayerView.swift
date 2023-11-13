@@ -46,12 +46,12 @@ class MoviePlayerView: UIView {
     var videoFrameView = UIView()
     let gifImageView = SDAnimatedImageView()
     var gifName: String = ""
-//    weak var imageView: GIFImageView!
-//    var currentGIFName: String = "sticker1" {
-//        didSet {
-//            self.animate()
-//        }
-//    }
+    //    weak var imageView: GIFImageView!
+    //    var currentGIFName: String = "sticker1" {
+    //        didSet {
+    //            self.animate()
+    //        }
+    //    }
     
     // let this layers class work as AVPlayerLayer than normal CALayer
     override class var layerClass: AnyClass {
@@ -67,9 +67,9 @@ class MoviePlayerView: UIView {
         playerItem.addObserver(self, forKeyPath: "status", options: [], context: nil)
         videoFrameView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         self.addSubview(videoFrameView)
-//        caLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
-//        caLayer.backgroundColor = UIColor.red.cgColor
-//        playerLayer.addSublayer(caLayer)
+        //        caLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
+        //        caLayer.backgroundColor = UIColor.red.cgColor
+        //        playerLayer.addSublayer(caLayer)
         videoFrameView.addSubview(gifImageView)
         
         NotificationCenter.default.addObserver(self, selector: #selector(videoDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)
@@ -97,12 +97,12 @@ class MoviePlayerView: UIView {
             let width = (movieWidth * self.frame.height) / movieHeight
             let x = ((self.frame.width - width)/2)
             videoFrameView.frame = CGRect(x: x, y: 0, width: width, height: self.frame.height)
-            gifImageView.frame = CGRect(x: Int(width) - 100, y: Int(self.frame.height) - 100, width: 100, height: 100)
+            gifImageView.frame = CGRect(x: Int(width) - Int(width/3.0), y: Int(self.frame.height) - Int(width/3.0), width: Int(width/3.0), height: Int(width/3.0))
         } else {
             let height = (movieHeight * self.frame.width) / movieWidth
             let y = ((self.frame.height - height)/2)
             videoFrameView.frame = CGRect(x: 0, y: y, width: self.frame.width, height: height)
-            gifImageView.frame = CGRect(x: Int(self.frame.width) - 100, y: Int(height) - 100, width: 100, height: 100)
+            gifImageView.frame = CGRect(x: Int(self.frame.width) - Int(height/3.0), y: Int(height) - Int(height/3.0), width: Int(height/3.0), height: Int(height/3.0))
         }
     }
     
@@ -164,6 +164,9 @@ class MoviePlayerView: UIView {
             gifImageView.startAnimating()
         }
     }
+}
+
+extension MoviePlayerView {
     
     func exportEditedVideo() {
         let asset = player.currentItem!.asset
@@ -173,12 +176,13 @@ class MoviePlayerView: UIView {
             return
         }
         do {
-            // 1
+            if endTrimTime == .zero {
+                endTrimTime = player.currentItem?.duration ?? .zero
+            }
             let timeRange = CMTimeRange(start: startTrimTime, duration: endTrimTime)
-            // 2
+            
             try compositionTrack.insertTimeRange(timeRange, of: assetTrack, at: .zero)
             
-            // 3
             if let audioAssetTrack = asset.tracks(withMediaType: .audio).first,
                let compositionAudioTrack = composition.addMutableTrack(
                 withMediaType: .audio,
@@ -189,7 +193,6 @@ class MoviePlayerView: UIView {
                     at: .zero)
             }
         } catch {
-            // 4
             print(error)
             return
         }
@@ -209,16 +212,20 @@ class MoviePlayerView: UIView {
         let videoLayer = CALayer()
         videoLayer.frame = CGRect(origin: .zero, size: videoSize)
         let overlayLayer = CALayer()
-        overlayLayer.frame = CGRect(origin: .zero, size: videoSize)
-        
-//        let gifLayer = CALayer()
-//        gifLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
+        if videoSize.height > videoSize.width {
+            let gifWidth = videoSize.width/3
+            let gifHeight = videoSize.width/3
+            overlayLayer.frame = CGRect(x: videoSize.width - gifWidth, y: 0, width: gifWidth, height: gifHeight)
+        } else {
+            let gifWidth = videoSize.height/3
+            let gifHeight = videoSize.height/3
+            overlayLayer.frame = CGRect(x: videoSize.width - gifWidth, y: 0, width: gifWidth, height: gifHeight)
+        }
         
         if let animation = animationForGif(gifName: gifName) {
             overlayLayer.add(animation, forKey: "contents")
         }
         
-//        overlayLayer.addSublayer(gifLayer)
         
         let outputLayer = CALayer()
         outputLayer.frame = CGRect(origin: .zero, size: videoSize)
@@ -280,7 +287,6 @@ class MoviePlayerView: UIView {
     }
     
     func gifToCFData(gifName: String) -> CFData? {
-        // Get the path of the GIF file in the bundle
         var name = gifName
         if let dotRange = name.range(of: ".") {
             name.removeSubrange(dotRange.lowerBound..<name.endIndex)
@@ -290,19 +296,9 @@ class MoviePlayerView: UIView {
             return nil
         }
         
-        // Create a UIImage from the GIF file
-        guard let gifImage = UIImage(contentsOfFile: gifPath) else {
-            print("Failed to create UIImage from GIF")
-            return nil
+        if let data = try? Data(contentsOf: URL(fileURLWithPath: gifPath)) as CFData {
+            return data
         }
-        
-        // Convert the UIImage to NSData and then to CFData
-        if let data = gifImage.sd_imageData(as: SDImageFormat.webP) {
-            let cfData = NSData(data: data) as CFData
-            return cfData
-        }
-        
-        print("Failed to convert UIImage to CFData")
         return nil
     }
     
@@ -313,9 +309,12 @@ class MoviePlayerView: UIView {
         var delayTimes: [CGFloat] = []
         
         var totalTime: CGFloat = 0.0
-        //        var gifWidth: CGFloat, gifHeight: CGFloat
         
-        guard let gifSource = CGImageSourceCreateWithData(gifToCFData(gifName: gifName)!, nil) else {
+        guard let gifData = gifToCFData(gifName: gifName) else {
+            return nil
+        }
+        
+        guard let gifSource = CGImageSourceCreateWithData(gifData, nil) else {
             return nil
         }
         
@@ -328,8 +327,6 @@ class MoviePlayerView: UIView {
             }
             
             guard let dic = CGImageSourceCopyPropertiesAtIndex(gifSource, i, nil) as? [AnyHashable: Any] else { continue }
-            //            gifWidth = dic[kCGImagePropertyPixelWidth] as? CGFloat ?? 0
-            //            gifHeight = dic[kCGImagePropertyPixelHeight] as? CGFloat ?? 0
             
             guard let gifDic: [AnyHashable: Any] = dic[kCGImagePropertyGIFDictionary] as? [AnyHashable: Any] else { continue }
             let delayTime = gifDic[kCGImagePropertyGIFDelayTime] as? CGFloat ?? 0
@@ -385,8 +382,6 @@ class MoviePlayerView: UIView {
     }
     
     func saveVideoCompositionToPhotosLibrary(videoComposition: AVMutableVideoComposition, outputURL: URL) {
-        // Create an AVAsset from the outputURL
-        let asset = AVAsset(url: outputURL)
         
         PHPhotoLibrary.shared().performChanges({
             // Add the video file to the Photos library
@@ -400,30 +395,6 @@ class MoviePlayerView: UIView {
                 }
             }
         }
-    }
-
-    
-    func getOutputURL() -> URL? {
-        // Get the documents directory
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        
-        // Create a unique filename for the output video
-        let outputFilename = "output_video.mp4"
-        let outputURL = documentsDirectory.appendingPathComponent(outputFilename)
-        
-        return outputURL
-    }
-    
-    private func addGif(to layer: CALayer) {
-        let image = gifImageView.image
-        let imageLayer = CALayer()
-        
-        imageLayer.frame = gifImageView.frame
-        
-        imageLayer.contents = image?.cgImage
-        layer.addSublayer(imageLayer)
     }
     
     private func orientation(from transform: CGAffineTransform) -> (orientation: UIImage.Orientation, isPortrait: Bool) {
@@ -470,10 +441,8 @@ extension MoviePlayerView {
         let time = CMTime(seconds: seconds * player.currentItem!.duration.seconds, preferredTimescale: movie.asset.duration.timescale)
         if time < startTrimTime {
             player.seek(to: startTrimTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-//            player.seek(to: startTrimTime)
         } else {
             player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-//            player.seek(to: time)
         }
     }
     
@@ -514,10 +483,6 @@ extension AVAsset{
             let size = videoTrack.naturalSize
             let txf = videoTrack.preferredTransform
             let realVidSize = size.applying(txf)
-            print(videoTrack)
-            print(txf)
-            print(size)
-            print(realVidSize)
             return realVidSize
         }
         return CGSize(width: 0, height: 0)
