@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 class EditorViewController: UIViewController {
     
@@ -79,9 +80,20 @@ class EditorViewController: UIViewController {
         return $0
     }(UILabel())
     
+    private lazy var gifStackView: UIStackView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.alignment = .leading
+        $0.distribution = .fillEqually
+        $0.axis = .horizontal
+        $0.spacing = 5
+        return $0
+    }(UIStackView())
+    
     private lazy var playbackTimer: Timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateSlider), userInfo: nil, repeats: true)
     
     var isScrubbing: Bool = false
+    
+    var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF"]
     
     var videoURL: URL
     var durationOfVideo: Double = 0.0
@@ -109,6 +121,22 @@ class EditorViewController: UIViewController {
         trimTimeLabel.text = "\(startOfVideo) ~ \(endOfVideo)"
         durationLabel.text = "Maximum \(durationOfVideo) sec"
         playerButton.isEnabled = false
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Export", style: .plain, target: self, action: #selector(exportTapped))
+        
+        for (index,image) in gifList.enumerated() {
+            let imageView = SDAnimatedImageView()
+            let animatedImage = SDAnimatedImage(named: "\(image)")
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = animatedImage
+            imageView.startAnimating()
+            imageView.tag = index
+            imageView.isUserInteractionEnabled = true
+            gifStackView.addArrangedSubview(imageView)
+        }
+        
+        gifStackView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapScrollView))
+        gifStackView.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -124,11 +152,16 @@ class EditorViewController: UIViewController {
     }
     
     private func setupView() {
-        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider, trimTimeLabel, durationLabel, cropButton].forEach { view.addSubview($0) }
+        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider, trimTimeLabel, durationLabel, cropButton, gifStackView].forEach { view.addSubview($0) }
         
         NSLayoutConstraint.activate([
             
-            endTrimSlider.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            gifStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            gifStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            gifStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            gifStackView.heightAnchor.constraint(equalToConstant: 50),
+            
+            endTrimSlider.bottomAnchor.constraint(equalTo: gifStackView.topAnchor, constant: -10),
             endTrimSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             endTrimSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             endTrimSlider.heightAnchor.constraint(equalToConstant: 50),
@@ -169,6 +202,20 @@ class EditorViewController: UIViewController {
             playerView.bottomAnchor.constraint(equalTo: playerButton.topAnchor, constant: -20),
             
         ])
+    }
+    
+    @objc func exportTapped() {
+        playerView.exportEditedVideo()
+    }
+    
+    @objc func tapScrollView(sender: UITapGestureRecognizer) {
+        for imageView in self.gifStackView.subviews{
+            let location = sender.location(in: imageView)
+            if let hitImageView = imageView.hitTest(location, with: nil) {
+//                print("Tapped", hitImageView.tag)
+                playerView.updateGifImageView(gifList[hitImageView.tag])
+            }
+        }
     }
     
     @objc func didTapPlayerButton(_ sender: Any) {
@@ -239,4 +286,9 @@ extension EditorViewController {
     @objc func startTrimSliderTouchUp(_ sender: UISlider) {
         playerView.play()
     }
+}
+
+
+class CustomTapGestureRecognizer: UITapGestureRecognizer {
+    var gifName: String?
 }

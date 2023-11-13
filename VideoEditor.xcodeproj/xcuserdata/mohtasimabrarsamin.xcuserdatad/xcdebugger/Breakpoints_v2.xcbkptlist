@@ -3,4 +3,118 @@
    uuid = "4B8388F8-6646-4FAE-8569-41C452A49529"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7C6AE438-AF7F-44F4-AAE4-D2F52B4C7209"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/MoviePlayerView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "toggleAnimation()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7C6AE438-AF7F-44F4-AAE4-D2F52B4C7209 - dc1856f3ed978e2b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.toggleAnimation() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "160"
+                  endingLineNumber = "160"
+                  offsetFromSymbolStart = "100">
+               </Location>
+               <Location
+                  uuid = "7C6AE438-AF7F-44F4-AAE4-D2F52B4C7209 - dc1856f3ed978e65"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.MoviePlayerView.toggleAnimation() -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
+                  offsetFromSymbolStart = "100">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2610FA85-DD3B-43EA-9569-CAF2C2B82BC9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/GifCollectionViewCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "addGif(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2610FA85-DD3B-43EA-9569-CAF2C2B82BC9 - af65911d8bb97e4c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.GifCollectionViewCell.addGif(Swift.String) -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/GifCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  uuid = "2610FA85-DD3B-43EA-9569-CAF2C2B82BC9 - af65911d8bb97db7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VideoEditor.GifCollectionViewCell.addGif(Swift.String) -&gt; ()"
+                  moduleName = "VideoEditor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/GifCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "60">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "552B8AFE-4BB6-4E02-9F30-C6EA00B29F74"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoEditor/MoviePlayerView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "217"
+            endingLineNumber = "217"
+            landmarkName = "exportEditedVideo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
