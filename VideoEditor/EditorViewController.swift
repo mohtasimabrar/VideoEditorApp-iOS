@@ -212,7 +212,6 @@ class EditorViewController: UIViewController {
         for imageView in self.gifStackView.subviews{
             let location = sender.location(in: imageView)
             if let hitImageView = imageView.hitTest(location, with: nil) {
-//                print("Tapped", hitImageView.tag)
                 playerView.updateGifImageView(gifList[hitImageView.tag])
             }
         }
@@ -250,9 +249,7 @@ extension EditorViewController {
     @objc func updateSlider() {
         if !isScrubbing {
             let currentTime = playerView.player.currentTime().seconds
-//            print(currentTime)
             let duration = playerView.player.currentItem?.duration.seconds ?? 1.0
-//            print(duration)
             let progress = Float(currentTime / duration)
             timelineSlider.setValue(progress, animated: true)
         }
@@ -280,15 +277,10 @@ extension EditorViewController {
     }
     
     @objc func endTrimSliderTouchUp(_ sender: UISlider) {
-        playerView.setEndTrimTime()
+        playerView.setEndTrimTime(endTime: Double(sender.value))
     }
     
     @objc func startTrimSliderTouchUp(_ sender: UISlider) {
-        playerView.play()
+        playerView.setStartTrimTime(startTime: Double(sender.value))
     }
-}
-
-
-class CustomTapGestureRecognizer: UITapGestureRecognizer {
-    var gifName: String?
 }

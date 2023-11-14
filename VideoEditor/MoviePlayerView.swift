@@ -46,12 +46,6 @@ class MoviePlayerView: UIView {
     var videoFrameView = UIView()
     let gifImageView = SDAnimatedImageView()
     var gifName: String = ""
-    //    weak var imageView: GIFImageView!
-    //    var currentGIFName: String = "sticker1" {
-    //        didSet {
-    //            self.animate()
-    //        }
-    //    }
     
     // let this layers class work as AVPlayerLayer than normal CALayer
     override class var layerClass: AnyClass {
@@ -67,9 +61,6 @@ class MoviePlayerView: UIView {
         playerItem.addObserver(self, forKeyPath: "status", options: [], context: nil)
         videoFrameView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         self.addSubview(videoFrameView)
-        //        caLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
-        //        caLayer.backgroundColor = UIColor.red.cgColor
-        //        playerLayer.addSublayer(caLayer)
         videoFrameView.addSubview(gifImageView)
         
         NotificationCenter.default.addObserver(self, selector: #selector(videoDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)
@@ -84,13 +75,28 @@ class MoviePlayerView: UIView {
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
-    
-    
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let movieWidth = abs(player.currentItem!.asset.videoSize().width)
-        let movieHeight = abs(player.currentItem!.asset.videoSize().height)
+        setGifFrame()
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "status" {
+            delegate?.playerDidBecomeReady()
+        }
+    }
+    
+    @objc func videoDidFinishPlaying() {
+        player.seek(to: startTrimTime)
+        player.play()
+    }
+    
+    func setGifFrame() {
+        guard let item = player.currentItem else {
+            return
+        }
+        let movieWidth = abs(item.asset.videoSize().width)
+        let movieHeight = abs(item.asset.videoSize().height)
         
         //TODO: Might try this logic for freeform cropping
         if movieHeight > movieWidth {
@@ -104,17 +110,6 @@ class MoviePlayerView: UIView {
             videoFrameView.frame = CGRect(x: 0, y: y, width: self.frame.width, height: height)
             gifImageView.frame = CGRect(x: Int(self.frame.width) - Int(height/3.0), y: Int(height) - Int(height/3.0), width: Int(height/3.0), height: Int(height/3.0))
         }
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "status" {
-            delegate?.playerDidBecomeReady()
-        }
-    }
-    
-    @objc func videoDidFinishPlaying() {
-        player.seek(to: startTrimTime)
-        player.play()
     }
     
     func updateGifImageView(_ gifName: String) {
@@ -141,20 +136,21 @@ class MoviePlayerView: UIView {
     func transformVideo() {
         let width = movie.asset.videoSize().height
         let cropRect = CGRect(x: 0, y: 0, width: width, height: width)
-        let cropScaleComposition = AVMutableVideoComposition(asset: player.currentItem!.asset, applyingCIFiltersWithHandler: {request in
-            
-            let cropFilter = CIFilter(name: "CICrop")! //1
-            cropFilter.setValue(request.sourceImage, forKey: kCIInputImageKey) //2
-            cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
-            
-            
-            let imageAtOrigin = cropFilter.outputImage!.transformed(by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)) //3
-            
-            request.finish(with: imageAtOrigin, context: nil) //4
+        let cropScaleComposition = AVMutableVideoComposition(asset: movie.asset, applyingCIFiltersWithHandler: { request in
+            if let cropFilter = CIFilter(name: "CICrop") {
+                cropFilter.setValue(request.sourceImage, forKey: kCIInputImageKey)
+                cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
+                
+                if let imageAtOrigin = cropFilter.outputImage?.transformed(by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)) {
+                    request.finish(with: imageAtOrigin, context: nil)
+                }
+            }
         })
         
-        cropScaleComposition.renderSize = cropRect.size //5
-        player.currentItem!.videoComposition = cropScaleComposition  //6
+        cropScaleComposition.renderSize = cropRect.size
+        if let item = player.currentItem {
+            item.videoComposition = cropScaleComposition
+        }
     }
     
     func toggleAnimation() {
@@ -169,9 +165,9 @@ class MoviePlayerView: UIView {
 extension MoviePlayerView {
     
     func exportEditedVideo() {
-        let asset = player.currentItem!.asset
+        let asset = player.currentItem?.asset
         let composition = AVMutableComposition()
-        guard let compositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid), let assetTrack = asset.tracks(withMediaType: .video).first else {
+        guard let asset, let compositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid), let assetTrack = asset.tracks(withMediaType: .video).first, startTrimTime < endTrimTime else {
             print("Something is wrong with the asset.")
             return
         }
@@ -179,7 +175,7 @@ extension MoviePlayerView {
             if endTrimTime == .zero {
                 endTrimTime = player.currentItem?.duration ?? .zero
             }
-            let timeRange = CMTimeRange(start: startTrimTime, duration: endTrimTime)
+            let timeRange = CMTimeRange(start: startTrimTime, duration: endTrimTime - startTrimTime)
             
             try compositionTrack.insertTimeRange(timeRange, of: assetTrack, at: .zero)
             
@@ -303,6 +299,7 @@ extension MoviePlayerView {
     }
     
     func animationForGif(gifName: String) -> CAKeyframeAnimation? {
+        if gifName.isEmpty { return nil }
         let animation = CAKeyframeAnimation(keyPath: #keyPath(CALayer.contents))
         
         var frames: [CGImage] = []
@@ -438,7 +435,10 @@ extension MoviePlayerView {
     }
     
     func seek(toSecond seconds: Double) {
-        let time = CMTime(seconds: seconds * player.currentItem!.duration.seconds, preferredTimescale: movie.asset.duration.timescale)
+        guard let item = player.currentItem else {
+            return
+        }
+        let time = CMTime(seconds: seconds * item.duration.seconds, preferredTimescale: movie.asset.duration.timescale)
         if time < startTrimTime {
             player.seek(to: startTrimTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         } else {
@@ -454,7 +454,6 @@ extension MoviePlayerView {
         if player.timeControlStatus == .playing {
             pause()
         }
-        startTrimTime = CMTime(seconds: startTime * player.currentItem!.duration.seconds, preferredTimescale: player.currentItem!.duration.timescale)
         self.seek(toSecond: startTime)
     }
     
@@ -462,12 +461,24 @@ extension MoviePlayerView {
         if player.timeControlStatus == .playing {
             pause()
         }
-        endTrimTime = CMTime(seconds: endTime * player.currentItem!.duration.seconds, preferredTimescale: player.currentItem!.duration.timescale)
         self.seek(toSecond: endTime)
     }
     
-    func setEndTrimTime() {
-        player.currentItem!.forwardPlaybackEndTime = endTrimTime
+    func setEndTrimTime(endTime: Double) {
+        guard let item = player.currentItem else {
+            return
+        }
+        endTrimTime = CMTime(seconds: endTime * item.duration.seconds, preferredTimescale: item.duration.timescale)
+        item.forwardPlaybackEndTime = endTrimTime
+        seekToStartTrim()
+        play()
+    }
+    
+    func setStartTrimTime(startTime: Double) {
+        guard let item = player.currentItem else {
+            return
+        }
+        startTrimTime = CMTime(seconds: startTime * item.duration.seconds, preferredTimescale: item.duration.timescale)
         seekToStartTrim()
         play()
     }
