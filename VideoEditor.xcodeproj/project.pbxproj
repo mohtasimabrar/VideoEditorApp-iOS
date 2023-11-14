@@ -13,11 +13,9 @@
 		862AF0142AFF4B1B00555437 /* handwash.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 862AF00E2AFF4B1B00555437 /* handwash.GIF */; };
 		862AF0152AFF4B1B00555437 /* whatever.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 862AF00F2AFF4B1B00555437 /* whatever.GIF */; };
 		862AF0162AFF4B1B00555437 /* wow.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 862AF0102AFF4B1B00555437 /* wow.GIF */; };
-		862AF01B2B003C3800555437 /* Gifu in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF01A2B003C3800555437 /* Gifu */; };
 		862AF01D2B0040F300555437 /* header.gif in Resources */ = {isa = PBXBuildFile; fileRef = 862AF01C2B0040F300555437 /* header.gif */; };
 		862AF0202B00445D00555437 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF01F2B00445D00555437 /* SDWebImage */; };
 		862AF0222B00445D00555437 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF0212B00445D00555437 /* SDWebImageMapKit */; };
-		865A37202B010D6800D3FFCF /* SwiftyGif in Frameworks */ = {isa = PBXBuildFile; productRef = 865A371F2B010D6800D3FFCF /* SwiftyGif */; };
 		865F1B1F2AFC2227001AF1AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B1E2AFC2227001AF1AD /* AppDelegate.swift */; };
 		865F1B212AFC2227001AF1AD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B202AFC2227001AF1AD /* SceneDelegate.swift */; };
 		865F1B232AFC2227001AF1AD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B222AFC2227001AF1AD /* ViewController.swift */; };
@@ -60,9 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				862AF0202B00445D00555437 /* SDWebImage in Frameworks */,
-				865A37202B010D6800D3FFCF /* SwiftyGif in Frameworks */,
 				862AF0222B00445D00555437 /* SDWebImageMapKit in Frameworks */,
-				862AF01B2B003C3800555437 /* Gifu in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,12 +105,12 @@
 				865F1B3C2AFC4B66001AF1AD /* EditorViewController.swift */,
 				865F1B322AFC2284001AF1AD /* MoviePlayerView.swift */,
 				865F1B362AFC234C001AF1AD /* PlayerButton.swift */,
+				865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */,
 				865F1B342AFC22B4001AF1AD /* Movie.swift */,
 				865F1B242AFC2227001AF1AD /* Main.storyboard */,
 				865F1B272AFC2228001AF1AD /* Assets.xcassets */,
 				865F1B292AFC2228001AF1AD /* LaunchScreen.storyboard */,
 				865F1B2C2AFC2228001AF1AD /* Info.plist */,
-				865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */,
 			);
 			path = VideoEditor;
 			sourceTree = "<group>";
@@ -136,10 +132,8 @@
 			);
 			name = VideoEditor;
 			packageProductDependencies = (
-				862AF01A2B003C3800555437 /* Gifu */,
 				862AF01F2B00445D00555437 /* SDWebImage */,
 				862AF0212B00445D00555437 /* SDWebImageMapKit */,
-				865A371F2B010D6800D3FFCF /* SwiftyGif */,
 			);
 			productName = VideoEditor;
 			productReference = 865F1B1B2AFC2227001AF1AD /* VideoEditor.app */;
@@ -170,9 +164,7 @@
 			);
 			mainGroup = 865F1B122AFC2227001AF1AD;
 			packageReferences = (
-				862AF0192B003C3800555437 /* XCRemoteSwiftPackageReference "Gifu" */,
 				862AF01E2B00445D00555437 /* XCRemoteSwiftPackageReference "SDWebImage" */,
-				865A371E2B010D6800D3FFCF /* XCRemoteSwiftPackageReference "SwiftyGif" */,
 			);
 			productRefGroup = 865F1B1C2AFC2227001AF1AD /* Products */;
 			projectDirPath = "";
@@ -440,14 +432,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		862AF0192B003C3800555437 /* XCRemoteSwiftPackageReference "Gifu" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kaishin/Gifu";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.2.2;
-			};
-		};
 		862AF01E2B00445D00555437 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
@@ -456,22 +440,9 @@
 				minimumVersion = 5.18.4;
 			};
 		};
-		865A371E2B010D6800D3FFCF /* XCRemoteSwiftPackageReference "SwiftyGif" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kirualex/SwiftyGif.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.4.4;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		862AF01A2B003C3800555437 /* Gifu */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 862AF0192B003C3800555437 /* XCRemoteSwiftPackageReference "Gifu" */;
-			productName = Gifu;
-		};
 		862AF01F2B00445D00555437 /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 862AF01E2B00445D00555437 /* XCRemoteSwiftPackageReference "SDWebImage" */;
@@ -481,11 +452,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 862AF01E2B00445D00555437 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
-		};
-		865A371F2B010D6800D3FFCF /* SwiftyGif */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 865A371E2B010D6800D3FFCF /* XCRemoteSwiftPackageReference "SwiftyGif" */;
-			productName = SwiftyGif;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

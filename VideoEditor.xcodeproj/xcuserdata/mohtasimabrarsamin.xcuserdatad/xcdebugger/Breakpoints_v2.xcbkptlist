@@ -52,53 +52,5 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A245DBBC-E676-4FA2-B056-CD53B4C913E8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VideoEditor/MoviePlayerView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
-            landmarkName = "exportEditedVideo()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A245DBBC-E676-4FA2-B056-CD53B4C913E8 - 3786512cbc46b173"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
-                  moduleName = "VideoEditor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "176"
-                  endingLineNumber = "176"
-                  offsetFromSymbolStart = "1332">
-               </Location>
-               <Location
-                  uuid = "A245DBBC-E676-4FA2-B056-CD53B4C913E8 - 3786512cbc46b173"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "VideoEditor.MoviePlayerView.exportEditedVideo() -&gt; ()"
-                  moduleName = "VideoEditor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mohtasimabrarsamin/Desktop/Personal%20Projects/VideoEditorApp-iOS/VideoEditor/MoviePlayerView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "176"
-                  endingLineNumber = "176"
-                  offsetFromSymbolStart = "1544">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

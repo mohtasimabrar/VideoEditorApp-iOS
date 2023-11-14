@@ -8,7 +8,6 @@
 import UIKit
 import AVFoundation
 import SDWebImage
-import SwiftyGif
 import Photos
 
 protocol MoviePlayetViewDelegate: AnyObject {
@@ -167,14 +166,14 @@ extension MoviePlayerView {
     func exportEditedVideo() {
         let asset = player.currentItem?.asset
         let composition = AVMutableComposition()
+        if endTrimTime == .zero {
+            endTrimTime = player.currentItem?.duration ?? .zero
+        }
         guard let asset, let compositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid), let assetTrack = asset.tracks(withMediaType: .video).first, startTrimTime < endTrimTime else {
             print("Something is wrong with the asset.")
             return
         }
         do {
-            if endTrimTime == .zero {
-                endTrimTime = player.currentItem?.duration ?? .zero
-            }
             let timeRange = CMTimeRange(start: startTrimTime, duration: endTrimTime - startTrimTime)
             
             try compositionTrack.insertTimeRange(timeRange, of: assetTrack, at: .zero)
