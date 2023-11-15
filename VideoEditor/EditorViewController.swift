@@ -214,8 +214,8 @@ class EditorViewController: UIViewController {
             
             playerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             playerButton.bottomAnchor.constraint(equalTo: timelineControlView.topAnchor, constant: -20),
-            playerButton.heightAnchor.constraint(equalToConstant: 40),
-            playerButton.widthAnchor.constraint(equalToConstant: 40),
+            playerButton.heightAnchor.constraint(equalToConstant: 50),
+            playerButton.widthAnchor.constraint(equalToConstant: 50),
             
             trimTimeLabel.topAnchor.constraint(equalTo: playerButton.topAnchor),
             trimTimeLabel.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor),
