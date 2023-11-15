@@ -16,9 +16,17 @@ protocol ExportViewModelDelegate: AnyObject {
 
 class ExportViewModel {
     
-    weak var delegate: ExportViewModelDelegate?
+    weak var delegate: ExportViewModelDelegate? = nil
     
-    func exportEditedVideo(asset: AVAsset, gifName: String) {
+    let asset: AVAsset
+    let gifName: String
+    
+    init(asset: AVAsset, gifName: String) {
+        self.asset = asset
+        self.gifName = gifName
+    }
+    
+    func exportEditedVideo() {
         let composition = AVMutableComposition()
         guard let compositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid), let assetTrack = asset.tracks(withMediaType: .video).first else {
             print("Something is wrong with the asset.")

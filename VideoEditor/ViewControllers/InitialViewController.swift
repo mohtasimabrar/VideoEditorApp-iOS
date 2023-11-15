@@ -74,6 +74,7 @@ class InitialViewController: UIViewController, UINavigationControllerDelegate {
     
 }
 
+//MARK: UIImagePickerControllerDelegate methods
 extension InitialViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let videoURL = info[.mediaURL] as? URL {

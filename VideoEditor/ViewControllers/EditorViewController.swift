@@ -226,7 +226,8 @@ class EditorViewController: UIViewController {
     }
     
     @objc func exportTapped() {
-        let exportVC = ExportViewController(asset: self.movie.asset.trimmedComposition(self.timelineControlView.selectedRange), gifName: self.playerView.gifName)
+        let exportVM = ExportViewModel(asset: self.movie.asset.trimmedComposition(self.timelineControlView.selectedRange), gifName: self.playerView.gifName)
+        let exportVC = ExportViewController(viewModel: exportVM)
         
         exportVC.modalPresentationStyle = .custom
         exportVC.transitioningDelegate = self

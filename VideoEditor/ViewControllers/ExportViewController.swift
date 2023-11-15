@@ -13,13 +13,7 @@ import SDWebImage
 
 class ExportViewController: UIViewController {
     
-    let asset: AVAsset
-    let gifName: String
-    private lazy var viewModel: ExportViewModel = {
-        $0.delegate = self
-        
-        return $0
-    }(ExportViewModel())
+    let viewModel: ExportViewModel
     
     private lazy var statusLabel: UILabel = {
         $0.font = UIFont.systemFont(ofSize: 22, weight: .bold)
@@ -41,9 +35,8 @@ class ExportViewController: UIViewController {
         return $0
     }(SDAnimatedImageView())
     
-    init(asset: AVAsset, gifName: String) {
-        self.asset = asset
-        self.gifName = gifName
+    init(viewModel: ExportViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -54,10 +47,11 @@ class ExportViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.delegate = self
         view.backgroundColor = UIColor(hex: "#F7F7F7")
         setupView()
         statusLabel.text = "Exporting..."
-        viewModel.exportEditedVideo(asset: asset, gifName: gifName)
+        viewModel.exportEditedVideo()
     }
     
     private func setupView() {
@@ -77,6 +71,7 @@ class ExportViewController: UIViewController {
     }
 }
 
+//MARK: ExportViewModelDelegate methods
 extension ExportViewController: ExportViewModelDelegate {
     func exportCompleted() {
         DispatchQueue.main.async {
