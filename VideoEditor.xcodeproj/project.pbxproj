@@ -13,7 +13,6 @@
 		862AF0142AFF4B1B00555437 /* handwash.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 862AF00E2AFF4B1B00555437 /* handwash.GIF */; };
 		862AF0152AFF4B1B00555437 /* whatever.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 862AF00F2AFF4B1B00555437 /* whatever.GIF */; };
 		862AF0162AFF4B1B00555437 /* wow.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 862AF0102AFF4B1B00555437 /* wow.GIF */; };
-		862AF01D2B0040F300555437 /* header.gif in Resources */ = {isa = PBXBuildFile; fileRef = 862AF01C2B0040F300555437 /* header.gif */; };
 		862AF0202B00445D00555437 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF01F2B00445D00555437 /* SDWebImage */; };
 		862AF0222B00445D00555437 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF0212B00445D00555437 /* SDWebImageMapKit */; };
 		8643C90B2B040BD60005BE0A /* VideoTrimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643C90A2B040BD60005BE0A /* VideoTrimmer.swift */; };
@@ -31,6 +30,17 @@
 		865F1B372AFC234C001AF1AD /* PlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B362AFC234C001AF1AD /* PlayerButton.swift */; };
 		865F1B3B2AFC4A04001AF1AD /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */; };
 		865F1B3D2AFC4B66001AF1AD /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B3C2AFC4B66001AF1AD /* EditorViewController.swift */; };
+		868EBC242B0456D700B15EB5 /* sad.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC232B0456D700B15EB5 /* sad.GIF */; };
+		868EBC2B2B04575000B15EB5 /* blush.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC252B04575000B15EB5 /* blush.GIF */; };
+		868EBC2C2B04575000B15EB5 /* love.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC262B04575000B15EB5 /* love.GIF */; };
+		868EBC2D2B04575000B15EB5 /* hugs.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC272B04575000B15EB5 /* hugs.GIF */; };
+		868EBC2E2B04575000B15EB5 /* angry.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC282B04575000B15EB5 /* angry.GIF */; };
+		868EBC2F2B04575000B15EB5 /* confused.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC292B04575000B15EB5 /* confused.GIF */; };
+		868EBC302B04575000B15EB5 /* loved.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC2A2B04575000B15EB5 /* loved.GIF */; };
+		868EBC352B04588900B15EB5 /* senti.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC312B04588900B15EB5 /* senti.GIF */; };
+		868EBC362B04588900B15EB5 /* annoyed.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC322B04588900B15EB5 /* annoyed.GIF */; };
+		868EBC372B04588900B15EB5 /* sleep.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC332B04588900B15EB5 /* sleep.GIF */; };
+		868EBC382B04588900B15EB5 /* wink.GIF in Resources */ = {isa = PBXBuildFile; fileRef = 868EBC342B04588900B15EB5 /* wink.GIF */; };
 		86DD682B2B044E0A0043C21D /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DD682A2B044E0A0043C21D /* UIColor+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +51,6 @@
 		862AF00E2AFF4B1B00555437 /* handwash.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = handwash.GIF; sourceTree = "<group>"; };
 		862AF00F2AFF4B1B00555437 /* whatever.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = whatever.GIF; sourceTree = "<group>"; };
 		862AF0102AFF4B1B00555437 /* wow.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wow.GIF; sourceTree = "<group>"; };
-		862AF01C2B0040F300555437 /* header.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = header.gif; sourceTree = "<group>"; };
 		8643C90A2B040BD60005BE0A /* VideoTrimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimmer.swift; sourceTree = "<group>"; };
 		8643C90C2B040BFD0005BE0A /* VideoTrimmerThumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimmerThumb.swift; sourceTree = "<group>"; };
 		8643C90F2B040DA00005BE0A /* AVAsset+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAsset+Extensions.swift"; sourceTree = "<group>"; };
@@ -59,6 +68,17 @@
 		865F1B362AFC234C001AF1AD /* PlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButton.swift; sourceTree = "<group>"; };
 		865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 		865F1B3C2AFC4B66001AF1AD /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
+		868EBC232B0456D700B15EB5 /* sad.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = sad.GIF; sourceTree = "<group>"; };
+		868EBC252B04575000B15EB5 /* blush.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = blush.GIF; sourceTree = "<group>"; };
+		868EBC262B04575000B15EB5 /* love.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = love.GIF; sourceTree = "<group>"; };
+		868EBC272B04575000B15EB5 /* hugs.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = hugs.GIF; sourceTree = "<group>"; };
+		868EBC282B04575000B15EB5 /* angry.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = angry.GIF; sourceTree = "<group>"; };
+		868EBC292B04575000B15EB5 /* confused.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = confused.GIF; sourceTree = "<group>"; };
+		868EBC2A2B04575000B15EB5 /* loved.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loved.GIF; sourceTree = "<group>"; };
+		868EBC312B04588900B15EB5 /* senti.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = senti.GIF; sourceTree = "<group>"; };
+		868EBC322B04588900B15EB5 /* annoyed.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = annoyed.GIF; sourceTree = "<group>"; };
+		868EBC332B04588900B15EB5 /* sleep.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = sleep.GIF; sourceTree = "<group>"; };
+		868EBC342B04588900B15EB5 /* wink.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wink.GIF; sourceTree = "<group>"; };
 		86DD682A2B044E0A0043C21D /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,10 +98,20 @@
 		862AF00A2AFF4B0100555437 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				868EBC322B04588900B15EB5 /* annoyed.GIF */,
+				868EBC312B04588900B15EB5 /* senti.GIF */,
+				868EBC332B04588900B15EB5 /* sleep.GIF */,
+				868EBC342B04588900B15EB5 /* wink.GIF */,
+				868EBC282B04575000B15EB5 /* angry.GIF */,
+				868EBC252B04575000B15EB5 /* blush.GIF */,
+				868EBC292B04575000B15EB5 /* confused.GIF */,
+				868EBC272B04575000B15EB5 /* hugs.GIF */,
+				868EBC262B04575000B15EB5 /* love.GIF */,
+				868EBC2A2B04575000B15EB5 /* loved.GIF */,
 				862AF0102AFF4B1B00555437 /* wow.GIF */,
 				862AF00B2AFF4B1B00555437 /* hello.GIF */,
+				868EBC232B0456D700B15EB5 /* sad.GIF */,
 				862AF00E2AFF4B1B00555437 /* handwash.GIF */,
-				862AF01C2B0040F300555437 /* header.gif */,
 				862AF00C2AFF4B1B00555437 /* glasses.GIF */,
 				862AF00D2AFF4B1B00555437 /* laugh.GIF */,
 				862AF00F2AFF4B1B00555437 /* whatever.GIF */,
@@ -203,16 +233,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				868EBC2F2B04575000B15EB5 /* confused.GIF in Resources */,
 				865F1B2B2AFC2228001AF1AD /* LaunchScreen.storyboard in Resources */,
 				862AF0162AFF4B1B00555437 /* wow.GIF in Resources */,
 				865F1B282AFC2228001AF1AD /* Assets.xcassets in Resources */,
-				862AF01D2B0040F300555437 /* header.gif in Resources */,
 				862AF0122AFF4B1B00555437 /* glasses.GIF in Resources */,
+				868EBC352B04588900B15EB5 /* senti.GIF in Resources */,
+				868EBC372B04588900B15EB5 /* sleep.GIF in Resources */,
+				868EBC2D2B04575000B15EB5 /* hugs.GIF in Resources */,
 				862AF0152AFF4B1B00555437 /* whatever.GIF in Resources */,
+				868EBC302B04575000B15EB5 /* loved.GIF in Resources */,
+				868EBC362B04588900B15EB5 /* annoyed.GIF in Resources */,
 				865F1B262AFC2227001AF1AD /* Main.storyboard in Resources */,
 				862AF0142AFF4B1B00555437 /* handwash.GIF in Resources */,
+				868EBC2B2B04575000B15EB5 /* blush.GIF in Resources */,
 				862AF0132AFF4B1B00555437 /* laugh.GIF in Resources */,
 				862AF0112AFF4B1B00555437 /* hello.GIF in Resources */,
+				868EBC2C2B04575000B15EB5 /* love.GIF in Resources */,
+				868EBC382B04588900B15EB5 /* wink.GIF in Resources */,
+				868EBC2E2B04575000B15EB5 /* angry.GIF in Resources */,
+				868EBC242B0456D700B15EB5 /* sad.GIF in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

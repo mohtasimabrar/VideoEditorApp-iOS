@@ -115,7 +115,7 @@ class EditorViewController: UIViewController {
     
     var isScrubbing: Bool = false
     
-    var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF", "wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF"]
+    var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF", "angry.GIF", "blush.GIF", "confused.GIF", "hugs.GIF", "love.GIF", "loved.GIF", "sad.GIF", "annoyed.GIF", "senti.GIF", "sleep.GIF", "wink.GIF"]
     
     var durationOfVideo: Double = 0.0
     var startOfVideo: Double = 0.0
