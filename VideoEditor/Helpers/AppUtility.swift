@@ -8,7 +8,5 @@
 import Foundation
 
 class AppUtility {
-    class func showProgress() {
-        
-    }
+    
 }

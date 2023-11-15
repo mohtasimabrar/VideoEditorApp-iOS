@@ -1,176 +1,31 @@
 //
-//  MoviePlayerView.swift
+//  ExportViewModel.swift
 //  VideoEditor
 //
-//  Created by Mohtasim Abrar Samin on 9/11/23.
+//  Created by Mohtasim Abrar Samin on 15/11/23.
 //
 
-import UIKit
+import Foundation
 import AVFoundation
-import SDWebImage
 import Photos
+import UIKit
 
-protocol MoviePlayetViewDelegate: AnyObject {
-    func playerDidBecomeReady()
+protocol ExportViewModelDelegate: AnyObject {
+    func exportCompleted()
 }
 
-class MoviePlayerView: UIView {
+class ExportViewModel {
     
-    weak var delegate: MoviePlayetViewDelegate?
+    weak var delegate: ExportViewModelDelegate?
     
-    var initialFrame: CGRect = CGRect.zero
-    var touchOffset: CGPoint = CGPoint.zero
-    
-    // use view's layer as AVPlayerLayer to play the movie
-    var playerLayer: AVPlayerLayer {
-        guard let layer = layer as? AVPlayerLayer else {
-            return AVPlayerLayer()
-        }
-        return layer
-    }
-    
-    // player here should be AVPlayerLayer's player
-    var player: AVPlayer {
-        get { return playerLayer.player ?? AVPlayer() }
-        set { playerLayer.player = newValue  }
-    }
-    
-    var startTrimTime: CMTime = CMTime.zero
-    var endTrimTime: CMTime = CMTime.zero
-    
-    var videoFrameView = UIView()
-    let gifImageView = SDAnimatedImageView()
-    var gifName: String = ""
-    var wasPlaying = false
-    
-    // let this layers class work as AVPlayerLayer than normal CALayer
-    override class var layerClass: AnyClass {
-        return AVPlayerLayer.self
-    }
-    
-    init(asset: AVAsset) {
-        super.init(frame: CGRectZero)
-        self.backgroundColor = .black
-        let playerItem = AVPlayerItem(asset: asset)
-        player = AVPlayer(playerItem: playerItem)
-        playerItem.addObserver(self, forKeyPath: "status", options: [], context: nil)
-        videoFrameView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
-        self.addSubview(videoFrameView)
-        videoFrameView.addSubview(gifImageView)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(videoDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("MoviePlayerView Deinit Called!!")
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        setGifFrame()
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "status" {
-            delegate?.playerDidBecomeReady()
-        }
-    }
-    
-    @objc func videoDidFinishPlaying() {
-        player.seek(to: startTrimTime)
-        player.play()
-    }
-    
-    func setGifFrame() {
-        guard let item = player.currentItem else {
-            return
-        }
-        let movieWidth = abs(item.asset.videoSize.width)
-        let movieHeight = abs(item.asset.videoSize.height)
-        
-        //TODO: Might try this logic for freeform cropping
-        if movieHeight > movieWidth {
-            let width = (movieWidth * self.frame.height) / movieHeight
-            let x = ((self.frame.width - width)/2)
-            videoFrameView.frame = CGRect(x: x, y: 0, width: width, height: self.frame.height)
-            gifImageView.frame = CGRect(x: Int(width) - Int(width/3.0), y: Int(self.frame.height) - Int(width/3.0), width: Int(width/3.0), height: Int(width/3.0))
-        } else {
-            let height = (movieHeight * self.frame.width) / movieWidth
-            let y = ((self.frame.height - height)/2)
-            videoFrameView.frame = CGRect(x: 0, y: y, width: self.frame.width, height: height)
-            gifImageView.frame = CGRect(x: Int(self.frame.width) - Int(height/3.0), y: Int(height) - Int(height/3.0), width: Int(height/3.0), height: Int(height/3.0))
-        }
-    }
-    
-    func updateGifImageView(_ gifName: String) {
-        self.gifName = gifName
-        let animatedImage = SDAnimatedImage(named: "\(gifName)")
-        gifImageView.contentMode = .scaleAspectFit
-        gifImageView.image = animatedImage
-        if player.timeControlStatus == .playing {
-            gifImageView.startAnimating()
-        } else {
-            gifImageView.stopAnimating()
-        }
-    }
-    
-    func playerStateChanged() {
-        if player.timeControlStatus == .playing {
-            pause()
-        } else {
-            play()
-        }
-        toggleAnimation()
-    }
-    
-    func transformVideo() {
-        let width = player.currentItem?.asset.videoSize.height
-        let cropRect = CGRect(x: 0, y: 0, width: width ?? 0.0, height: width ?? 0.0)
-        let cropScaleComposition = AVMutableVideoComposition(asset: player.currentItem?.asset ?? AVAsset(), applyingCIFiltersWithHandler: { request in
-            if let cropFilter = CIFilter(name: "CICrop") {
-                cropFilter.setValue(request.sourceImage, forKey: kCIInputImageKey)
-                cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
-                
-                if let imageAtOrigin = cropFilter.outputImage?.transformed(by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)) {
-                    request.finish(with: imageAtOrigin, context: nil)
-                }
-            }
-        })
-        
-        cropScaleComposition.renderSize = cropRect.size
-        if let item = player.currentItem {
-            item.videoComposition = cropScaleComposition
-        }
-    }
-    
-    func toggleAnimation() {
-        if gifImageView.isAnimating {
-            gifImageView.stopAnimating()
-        } else {
-            gifImageView.startAnimating()
-        }
-    }
-}
-
-extension MoviePlayerView {
-    
-    func exportEditedVideo() {
-        let asset = player.currentItem?.asset
+    func exportEditedVideo(asset: AVAsset, gifName: String) {
         let composition = AVMutableComposition()
-        if endTrimTime == .zero {
-            endTrimTime = player.currentItem?.duration ?? .zero
-        }
-        guard let asset, let compositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid), let assetTrack = asset.tracks(withMediaType: .video).first, startTrimTime < endTrimTime else {
+        guard let compositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid), let assetTrack = asset.tracks(withMediaType: .video).first else {
             print("Something is wrong with the asset.")
             return
         }
         do {
-            let timeRange = CMTimeRange(start: startTrimTime, duration: endTrimTime - startTrimTime)
+            let timeRange = CMTimeRange(start: .zero, duration: asset.duration)
             
             try compositionTrack.insertTimeRange(timeRange, of: assetTrack, at: .zero)
             
@@ -203,14 +58,18 @@ extension MoviePlayerView {
         let videoLayer = CALayer()
         videoLayer.frame = CGRect(origin: .zero, size: videoSize)
         let overlayLayer = CALayer()
+        overlayLayer.contentsGravity = .resizeAspect
+        
         if videoSize.height > videoSize.width {
             let gifWidth = videoSize.width/3
             let gifHeight = videoSize.width/3
-            overlayLayer.frame = CGRect(x: videoSize.width - gifWidth, y: 0, width: gifWidth, height: gifHeight)
+            let padding = videoSize.width / 40
+            overlayLayer.frame = CGRect(x: videoSize.width - gifWidth - CGFloat(padding), y: CGFloat(padding), width: gifWidth, height: gifHeight)
         } else {
             let gifWidth = videoSize.height/3
             let gifHeight = videoSize.height/3
-            overlayLayer.frame = CGRect(x: videoSize.width - gifWidth, y: 0, width: gifWidth, height: gifHeight)
+            let padding = videoSize.height / 40
+            overlayLayer.frame = CGRect(x: videoSize.width - gifWidth - CGFloat(padding), y: CGFloat(padding), width: gifWidth, height: gifHeight)
         }
         
         if let animation = animationForGif(gifName: gifName) {
@@ -273,11 +132,9 @@ extension MoviePlayerView {
                 }
             }
         }
-        
-        
     }
     
-    func gifToCFData(gifName: String) -> CFData? {
+    private func gifToCFData(gifName: String) -> CFData? {
         var name = gifName
         if let dotRange = name.range(of: ".") {
             name.removeSubrange(dotRange.lowerBound..<name.endIndex)
@@ -293,13 +150,12 @@ extension MoviePlayerView {
         return nil
     }
     
-    func animationForGif(gifName: String) -> CAKeyframeAnimation? {
+    private func animationForGif(gifName: String) -> CAKeyframeAnimation? {
         if gifName.isEmpty { return nil }
-        let animation = CAKeyframeAnimation(keyPath: #keyPath(CALayer.contents))
         
+        let animation = CAKeyframeAnimation(keyPath: #keyPath(CALayer.contents))
         var frames: [CGImage] = []
         var delayTimes: [CGFloat] = []
-        
         var totalTime: CGFloat = 0.0
         
         guard let gifData = gifToCFData(gifName: gifName) else {
@@ -314,13 +170,10 @@ extension MoviePlayerView {
         let frameCount = CGImageSourceGetCount(gifSource)
         
         for i in 0..<frameCount {
-            guard let frame = CGImageSourceCreateImageAtIndex(gifSource, i, nil) else {
-                continue
-            }
-            
+            guard let frame = CGImageSourceCreateImageAtIndex(gifSource, i, nil) else { continue }
             guard let dic = CGImageSourceCopyPropertiesAtIndex(gifSource, i, nil) as? [AnyHashable: Any] else { continue }
-            
             guard let gifDic: [AnyHashable: Any] = dic[kCGImagePropertyGIFDictionary] as? [AnyHashable: Any] else { continue }
+            
             let delayTime = gifDic[kCGImagePropertyGIFDelayTime] as? CGFloat ?? 0
             
             frames.append(frame)
@@ -348,14 +201,13 @@ extension MoviePlayerView {
         animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
         animation.duration = Double(totalTime)
         animation.repeatCount = .greatestFiniteMagnitude
-        
         animation.beginTime = AVCoreAnimationBeginTimeAtZero
         animation.isRemovedOnCompletion = false
         
         return animation
     }
     
-    func exportVideoCompositionToPhotos(videoComposition: AVMutableVideoComposition, outputURL: URL) {
+    private func exportVideoCompositionToPhotos(videoComposition: AVMutableVideoComposition, outputURL: URL) {
         // Check if the Photos library is authorized
         
         if PHPhotoLibrary.authorizationStatus() == .authorized {
@@ -373,14 +225,13 @@ extension MoviePlayerView {
         }
     }
     
-    func saveVideoCompositionToPhotosLibrary(videoComposition: AVMutableVideoComposition, outputURL: URL) {
-        
+    private func saveVideoCompositionToPhotosLibrary(videoComposition: AVMutableVideoComposition, outputURL: URL) {
         PHPhotoLibrary.shared().performChanges({
             // Add the video file to the Photos library
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputURL)
-        }) { success, error in
+        }) { [weak self] success, error in
             if success {
-                print("Video saved to Photos library successfully")
+                self?.delegate?.exportCompleted()
             } else {
                 if let error = error {
                     print("Error saving video to Photos library: \(error.localizedDescription)")
@@ -415,56 +266,4 @@ extension MoviePlayerView {
         
         return instruction
     }
-    
-}
-
-//MARK: Player controls
-extension MoviePlayerView {
-    
-    func play() {
-        player.play()
-    }
-    
-    func pause() {
-        player.pause()
-    }
-    
-    func seek(to time: CMTime) {
-        player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-    }
-    
-    func seekToStartTrim() {
-        seek(to: startTrimTime)
-    }
-    
-    func startedTrimming() {
-        if player.timeControlStatus == .playing {
-            wasPlaying = true
-            pause()
-        } else {
-            wasPlaying = false
-        }
-    }
-    
-    func trimming(timeRange: CMTimeRange, state: TrimmingState) {
-        if state == .leading {
-            self.seek(to: timeRange.start)
-        } else if state == .trailing {
-            self.seek(to: timeRange.end)
-        }
-    }
-    
-    func endedTrimming(timeRange: CMTimeRange) {
-        guard let item = player.currentItem else {
-            return
-        }
-        startTrimTime = timeRange.start
-        endTrimTime = timeRange.end
-        item.forwardPlaybackEndTime = endTrimTime
-        seekToStartTrim()
-        if wasPlaying {
-            play()
-        }
-    }
-    
 }

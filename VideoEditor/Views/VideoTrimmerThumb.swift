@@ -10,8 +10,8 @@ import UIKit
 class VideoTrimmerThumb: UIView {
     var isActive = false
     
-    var leadingChevronImageView = UIImageView(image: UIImage(systemName: "chevron.compact.left"))
-    var trailingChevronView = UIImageView(image: UIImage(systemName: "chevron.compact.right"))
+    var leadingChevronView = UIView()
+    var trailingChevronView = UIView()
     
     var wrapperView = UIView()
     var leadingView = UIView()
@@ -23,7 +23,7 @@ class VideoTrimmerThumb: UIView {
     let trailingGrabber = UIControl()
     
     let chevronWidth = CGFloat(16)
-    let edgeHeight = CGFloat(4)
+    let edgeHeight = CGFloat(6)
     
     // MARK: - Input
     @objc private func x(_ sender: Any) {
@@ -41,14 +41,8 @@ class VideoTrimmerThumb: UIView {
     
     private func setup() {
         
-        leadingChevronImageView.contentMode = .scaleAspectFit
-        trailingChevronView.contentMode = .scaleAspectFit
-        
-        leadingChevronImageView.tintColor = .white
-        trailingChevronView.tintColor = .white
-        
-        leadingChevronImageView.tintAdjustmentMode = .normal
-        trailingChevronView.tintAdjustmentMode = .normal
+        leadingChevronView.backgroundColor = .white
+        trailingChevronView.backgroundColor = .white
         
         leadingView.layer.cornerRadius = 6
         leadingView.layer.cornerCurve = .continuous
@@ -58,7 +52,7 @@ class VideoTrimmerThumb: UIView {
         trailingView.layer.cornerCurve = .continuous
         trailingView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
-        leadingView.addSubview(leadingChevronImageView)
+        leadingView.addSubview(leadingChevronView)
         trailingView.addSubview(trailingChevronView)
         
         //        wrapperView.layer.shadowColor = UIColor.black.cgColor
@@ -94,11 +88,11 @@ class VideoTrimmerThumb: UIView {
         topView.frame = CGRect(x: chevronWidth, y: 0, width: bounds.width - chevronWidth * 2, height: edgeHeight)
         bottomView.frame = CGRect(x: chevronWidth, y: bounds.height - edgeHeight, width: bounds.width - chevronWidth * 2, height: edgeHeight)
         
-        let chevronHorizontalInset = CGFloat(2)
-        let chevronVerticalInset = CGFloat(8)
+        let chevronHorizontalInset = CGFloat(7)
+        let chevronVerticalInset = CGFloat(16)
         let chevronFrame = CGRect(x: chevronHorizontalInset, y: chevronVerticalInset, width: chevronWidth - chevronHorizontalInset * 2, height: size.height - chevronVerticalInset * 2)
         
-        leadingChevronImageView.frame = chevronFrame
+        leadingChevronView.frame = chevronFrame
         trailingChevronView.frame = chevronFrame
         
         leadingGrabber.frame = leadingView.frame

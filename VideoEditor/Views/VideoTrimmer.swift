@@ -146,7 +146,7 @@ enum TrimmingState {
     private(set) var trimmingState = TrimmingState.none {
         didSet {
             UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction], animations: {
-                self.shadowView.layer.shadowOpacity = (self.trimmingState != .none ? 0.5 : 0.25)
+                self.shadowView.layer.shadowOpacity = 0
                 self.shadowView.layer.shadowRadius = (self.trimmingState != .none ? 4 : 2)
             })
         }
@@ -221,12 +221,6 @@ enum TrimmingState {
         thumbnailWrapperView.addSubview(thumbnailTrailingCoverView)
         
         progressIndicator.backgroundColor = .white
-        progressIndicator.layer.shadowColor = UIColor.black.cgColor
-        progressIndicator.layer.shadowOffset = .zero
-        progressIndicator.layer.shadowRadius = 2
-        progressIndicator.layer.shadowOpacity = 0.25
-        progressIndicator.layer.cornerRadius = 2
-        progressIndicator.layer.cornerCurve = .continuous
         
         addSubview(shadowView)
         wrapperView.clipsToBounds = true
@@ -259,7 +253,7 @@ enum TrimmingState {
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOffset = .zero
         shadowView.layer.shadowRadius = 2
-        shadowView.layer.shadowOpacity = 0.25
+        shadowView.layer.shadowOpacity = 0
         
         leadingGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(leadingGrabberPanned(_:)))
         leadingGestureRecognizer.allowableMovement = CGFloat.greatestFiniteMagnitude
@@ -713,10 +707,10 @@ enum TrimmingState {
         trailingThumbRest.frame = CGRect(x: thumbnailRect.width - inset, y: 0, width: inset, height: thumbnailRect.height)
         
         if progressIndicator.alpha > 0 {
-            let progressWidth = CGFloat(4)
+            let progressWidth = CGFloat(2)
             let progressIndicatorOffset = locationForTime(progress)
             let progressLeft = min(max(thumbView.frame.minX + inset, progressIndicatorOffset - progressWidth * 0.5), thumbView.frame.maxX - inset - progressWidth)
-            progressIndicator.frame = CGRect(x: progressLeft, y: thumbnailRect.minY, width: progressWidth, height: thumbnailRect.height)
+            progressIndicator.frame = CGRect(x: progressLeft, y: 0, width: progressWidth, height: self.frame.height)
             
             let progressControlWidth = CGFloat(24)
             

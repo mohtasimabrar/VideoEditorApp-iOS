@@ -12,11 +12,9 @@ import AVFoundation
 
 class EditorViewController: UIViewController {
     
-    var movie: Movie
+    private var movie: Movie
     
-    var asset: AVAsset {
-        movie.asset
-    }
+    private var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF", "angry.GIF", "blush.GIF", "confused.GIF", "hugs.GIF", "love.GIF", "loved.GIF", "sad.GIF", "annoyed.GIF", "senti.GIF", "sleep.GIF", "wink.GIF"]
     
     private lazy var playerButton: PlayerButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -109,17 +107,13 @@ class EditorViewController: UIViewController {
         return $0
     }(UIStackView())
     
+    private var asset: AVAsset {
+        movie.asset
+    }
+    
     private var player: AVPlayer {
         playerView.player
     }
-    
-    var isScrubbing: Bool = false
-    
-    var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF", "angry.GIF", "blush.GIF", "confused.GIF", "hugs.GIF", "love.GIF", "loved.GIF", "sad.GIF", "annoyed.GIF", "senti.GIF", "sleep.GIF", "wink.GIF"]
-    
-    var durationOfVideo: Double = 0.0
-    var startOfVideo: Double = 0.0
-    var endOfVideo: Double = 0.0
     
     init(videoURL: URL) {
         self.movie = Movie(withURL: videoURL)
@@ -140,8 +134,6 @@ class EditorViewController: UIViewController {
         title = "TRIM"
         self.navigationController?.navigationBar.tintColor = UIColor(hex: "#9B5AFA")
         setupView()
-        trimTimeLabel.text = "\(startOfVideo) ~ \(endOfVideo)"
-        durationLabel.text = "Maximum \(durationOfVideo) sec"
         playerButton.isEnabled = false
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Export", style: .plain, target: self, action: #selector(exportTapped))
         
@@ -177,15 +169,8 @@ class EditorViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        playerView.player.pause()
+        playerView.pause()
     }
-    
-//    func sampleMethod() {
-//        let mixComp = AVMutableComposition(url: videoURL)
-//        let originalDuration = mixComp.duration
-//        mixComp.removeTimeRange(CMTimeRange(start: .zero, end: CMTime(seconds: 5.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))))
-//        mixComp.removeTimeRange(CMTimeRange(start: CMTime(seconds: 10.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), end: originalDuration))
-//    }
     
     private func setupView() {
         [playerButton, playerView, timelineControlView, trimTimeLabel, durationLabel, cropButton, scrollView, stickerLabel].forEach { view.addSubview($0) }
@@ -241,7 +226,12 @@ class EditorViewController: UIViewController {
     }
     
     @objc func exportTapped() {
-        playerView.exportEditedVideo()
+        let exportVC = ExportViewController(asset: self.movie.asset.trimmedComposition(self.timelineControlView.selectedRange), gifName: self.playerView.gifName)
+        
+        exportVC.modalPresentationStyle = .custom
+        exportVC.transitioningDelegate = self
+        playerView.pause()
+        self.present(exportVC, animated: true, completion: nil)
     }
     
     @objc func tapScrollView(sender: UITapGestureRecognizer) {
@@ -254,7 +244,6 @@ class EditorViewController: UIViewController {
     }
     
     @objc func didTapPlayerButton(_ sender: Any) {
-        playerButton.playerState.tap()
         playerView.playerStateChanged()
     }
     
@@ -270,26 +259,30 @@ class EditorViewController: UIViewController {
 
 //MARK: MoviePlayerViewDelegate methods
 extension EditorViewController: MoviePlayetViewDelegate {
+    func playerStartedPlaying() {
+        playerButton.playerState = .play
+    }
+    
+    func playerPausedPlaying() {
+        playerButton.playerState = .pause
+    }
+    
     func playerDidBecomeReady() {
         self.playerView.playerStateChanged()
         self.playerButton.isEnabled = true
-        self.durationOfVideo = playerView.player.currentItem?.duration.seconds ?? 0.0
-        self.endOfVideo = durationOfVideo
         setLabels()
-        durationLabel.text = "Maximum \(Double(round(100 * durationOfVideo)) / 100) sec"
+        durationLabel.text = "Maximum \(Double(round(100 * (playerView.player.currentItem?.duration.seconds ?? 0.0))) / 100) sec"
     }
 }
 
 //MARK: Timeline related methods
 extension EditorViewController {
     @objc private func didBeginTrimming(_ sender: VideoTrimmer) {
-        
         playerView.startedTrimming()
     }
     
     @objc private func didEndTrimming(_ sender: VideoTrimmer) {
         setLabels()
-        
         playerView.endedTrimming(timeRange: timelineControlView.selectedRange)
     }
     
@@ -299,15 +292,22 @@ extension EditorViewController {
     }
     
     @objc private func didBeginScrubbing(_ sender: VideoTrimmer) {
-        
+        playerView.pause()
     }
     
     @objc private func didEndScrubbing(_ sender: VideoTrimmer) {
-        
+        playerView.play()
     }
     
     @objc private func progressDidChanged(_ sender: VideoTrimmer) {
         let time = CMTimeSubtract(timelineControlView.progress, timelineControlView.selectedRange.start)
         playerView.seek(to: time)
+    }
+}
+
+//MARK: UIViewControllerTransitioningDelegate methods
+extension EditorViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        PresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

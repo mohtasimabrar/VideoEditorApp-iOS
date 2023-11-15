@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UINavigationControllerDelegate {
+class InitialViewController: UIViewController, UINavigationControllerDelegate {
     
     private lazy var selectMediaButton: UIButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -74,11 +74,10 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     
 }
 
-extension ViewController: UIImagePickerControllerDelegate {
+extension InitialViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let videoURL = info[.mediaURL] as? URL {
             let editorVC = EditorViewController(videoURL: videoURL)
-            
             picker.dismiss(animated: true, completion: nil)
             self.navigationController?.pushViewController(editorVC, animated: true)
         }
