@@ -16,6 +16,10 @@
 		862AF01D2B0040F300555437 /* header.gif in Resources */ = {isa = PBXBuildFile; fileRef = 862AF01C2B0040F300555437 /* header.gif */; };
 		862AF0202B00445D00555437 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF01F2B00445D00555437 /* SDWebImage */; };
 		862AF0222B00445D00555437 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 862AF0212B00445D00555437 /* SDWebImageMapKit */; };
+		8643C90B2B040BD60005BE0A /* VideoTrimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643C90A2B040BD60005BE0A /* VideoTrimmer.swift */; };
+		8643C90D2B040BFD0005BE0A /* VideoTrimmerThumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643C90C2B040BFD0005BE0A /* VideoTrimmerThumb.swift */; };
+		8643C9102B040DA00005BE0A /* AVAsset+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643C90F2B040DA00005BE0A /* AVAsset+Extensions.swift */; };
+		8643C9122B040DDD0005BE0A /* CMTime+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643C9112B040DDD0005BE0A /* CMTime+Extensions.swift */; };
 		865F1B1F2AFC2227001AF1AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B1E2AFC2227001AF1AD /* AppDelegate.swift */; };
 		865F1B212AFC2227001AF1AD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B202AFC2227001AF1AD /* SceneDelegate.swift */; };
 		865F1B232AFC2227001AF1AD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B222AFC2227001AF1AD /* ViewController.swift */; };
@@ -27,6 +31,7 @@
 		865F1B372AFC234C001AF1AD /* PlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B362AFC234C001AF1AD /* PlayerButton.swift */; };
 		865F1B3B2AFC4A04001AF1AD /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */; };
 		865F1B3D2AFC4B66001AF1AD /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865F1B3C2AFC4B66001AF1AD /* EditorViewController.swift */; };
+		86DD682B2B044E0A0043C21D /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DD682A2B044E0A0043C21D /* UIColor+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +42,10 @@
 		862AF00F2AFF4B1B00555437 /* whatever.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = whatever.GIF; sourceTree = "<group>"; };
 		862AF0102AFF4B1B00555437 /* wow.GIF */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wow.GIF; sourceTree = "<group>"; };
 		862AF01C2B0040F300555437 /* header.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = header.gif; sourceTree = "<group>"; };
+		8643C90A2B040BD60005BE0A /* VideoTrimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimmer.swift; sourceTree = "<group>"; };
+		8643C90C2B040BFD0005BE0A /* VideoTrimmerThumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimmerThumb.swift; sourceTree = "<group>"; };
+		8643C90F2B040DA00005BE0A /* AVAsset+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAsset+Extensions.swift"; sourceTree = "<group>"; };
+		8643C9112B040DDD0005BE0A /* CMTime+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMTime+Extensions.swift"; sourceTree = "<group>"; };
 		865F1B1B2AFC2227001AF1AD /* VideoEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		865F1B1E2AFC2227001AF1AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		865F1B202AFC2227001AF1AD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -50,6 +59,7 @@
 		865F1B362AFC234C001AF1AD /* PlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButton.swift; sourceTree = "<group>"; };
 		865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 		865F1B3C2AFC4B66001AF1AD /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
+		86DD682A2B044E0A0043C21D /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +89,16 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		8643C90E2B040D920005BE0A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				8643C90F2B040DA00005BE0A /* AVAsset+Extensions.swift */,
+				8643C9112B040DDD0005BE0A /* CMTime+Extensions.swift */,
+				86DD682A2B044E0A0043C21D /* UIColor+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		865F1B122AFC2227001AF1AD = {
 			isa = PBXGroup;
 			children = (
@@ -98,12 +118,15 @@
 		865F1B1D2AFC2227001AF1AD /* VideoEditor */ = {
 			isa = PBXGroup;
 			children = (
+				8643C90E2B040D920005BE0A /* Extensions */,
 				862AF00A2AFF4B0100555437 /* Supporting Files */,
 				865F1B1E2AFC2227001AF1AD /* AppDelegate.swift */,
 				865F1B202AFC2227001AF1AD /* SceneDelegate.swift */,
 				865F1B222AFC2227001AF1AD /* ViewController.swift */,
 				865F1B3C2AFC4B66001AF1AD /* EditorViewController.swift */,
 				865F1B322AFC2284001AF1AD /* MoviePlayerView.swift */,
+				8643C90A2B040BD60005BE0A /* VideoTrimmer.swift */,
+				8643C90C2B040BFD0005BE0A /* VideoTrimmerThumb.swift */,
 				865F1B362AFC234C001AF1AD /* PlayerButton.swift */,
 				865F1B3A2AFC4A04001AF1AD /* AppUtility.swift */,
 				865F1B342AFC22B4001AF1AD /* Movie.swift */,
@@ -200,12 +223,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8643C9122B040DDD0005BE0A /* CMTime+Extensions.swift in Sources */,
+				8643C9102B040DA00005BE0A /* AVAsset+Extensions.swift in Sources */,
 				865F1B3B2AFC4A04001AF1AD /* AppUtility.swift in Sources */,
+				86DD682B2B044E0A0043C21D /* UIColor+Extensions.swift in Sources */,
 				865F1B372AFC234C001AF1AD /* PlayerButton.swift in Sources */,
 				865F1B332AFC2284001AF1AD /* MoviePlayerView.swift in Sources */,
 				865F1B3D2AFC4B66001AF1AD /* EditorViewController.swift in Sources */,
 				865F1B232AFC2227001AF1AD /* ViewController.swift in Sources */,
 				865F1B1F2AFC2227001AF1AD /* AppDelegate.swift in Sources */,
+				8643C90B2B040BD60005BE0A /* VideoTrimmer.swift in Sources */,
+				8643C90D2B040BFD0005BE0A /* VideoTrimmerThumb.swift in Sources */,
 				865F1B212AFC2227001AF1AD /* SceneDelegate.swift in Sources */,
 				865F1B352AFC22B4001AF1AD /* Movie.swift in Sources */,
 			);

@@ -16,12 +16,8 @@ protocol MoviePlayetViewDelegate: AnyObject {
 
 class MoviePlayerView: UIView {
     
-    // asset that is to be played
-    var movie: Movie
-    
     weak var delegate: MoviePlayetViewDelegate?
     
-    let caLayer = CALayer()
     var initialFrame: CGRect = CGRect.zero
     var touchOffset: CGPoint = CGPoint.zero
     
@@ -45,17 +41,17 @@ class MoviePlayerView: UIView {
     var videoFrameView = UIView()
     let gifImageView = SDAnimatedImageView()
     var gifName: String = ""
+    var wasPlaying = false
     
     // let this layers class work as AVPlayerLayer than normal CALayer
     override class var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
     
-    init(movie: Movie) {
-        self.movie = movie
+    init(asset: AVAsset) {
         super.init(frame: CGRectZero)
         self.backgroundColor = .black
-        let playerItem = AVPlayerItem(asset: movie.asset)
+        let playerItem = AVPlayerItem(asset: asset)
         player = AVPlayer(playerItem: playerItem)
         playerItem.addObserver(self, forKeyPath: "status", options: [], context: nil)
         videoFrameView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
@@ -94,8 +90,8 @@ class MoviePlayerView: UIView {
         guard let item = player.currentItem else {
             return
         }
-        let movieWidth = abs(item.asset.videoSize().width)
-        let movieHeight = abs(item.asset.videoSize().height)
+        let movieWidth = abs(item.asset.videoSize.width)
+        let movieHeight = abs(item.asset.videoSize.height)
         
         //TODO: Might try this logic for freeform cropping
         if movieHeight > movieWidth {
@@ -133,9 +129,9 @@ class MoviePlayerView: UIView {
     }
     
     func transformVideo() {
-        let width = movie.asset.videoSize().height
-        let cropRect = CGRect(x: 0, y: 0, width: width, height: width)
-        let cropScaleComposition = AVMutableVideoComposition(asset: movie.asset, applyingCIFiltersWithHandler: { request in
+        let width = player.currentItem?.asset.videoSize.height
+        let cropRect = CGRect(x: 0, y: 0, width: width ?? 0.0, height: width ?? 0.0)
+        let cropScaleComposition = AVMutableVideoComposition(asset: player.currentItem?.asset ?? AVAsset(), applyingCIFiltersWithHandler: { request in
             if let cropFilter = CIFilter(name: "CICrop") {
                 cropFilter.setValue(request.sourceImage, forKey: kCIInputImageKey)
                 cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
@@ -433,68 +429,42 @@ extension MoviePlayerView {
         player.pause()
     }
     
-    func seek(toSecond seconds: Double) {
-        guard let item = player.currentItem else {
-            return
-        }
-        let time = CMTime(seconds: seconds * item.duration.seconds, preferredTimescale: movie.asset.duration.timescale)
-        if time < startTrimTime {
-            player.seek(to: startTrimTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-        } else {
-            player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-        }
+    func seek(to time: CMTime) {
+        player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
     }
     
     func seekToStartTrim() {
-        player.seek(to: startTrimTime)
+        seek(to: startTrimTime)
     }
     
-    func trimStart(startTime: Double) {
+    func startedTrimming() {
         if player.timeControlStatus == .playing {
+            wasPlaying = true
             pause()
+        } else {
+            wasPlaying = false
         }
-        self.seek(toSecond: startTime)
     }
     
-    func trimEnd(endTime: Double) {
-        if player.timeControlStatus == .playing {
-            pause()
+    func trimming(timeRange: CMTimeRange, state: TrimmingState) {
+        if state == .leading {
+            self.seek(to: timeRange.start)
+        } else if state == .trailing {
+            self.seek(to: timeRange.end)
         }
-        self.seek(toSecond: endTime)
     }
     
-    func setEndTrimTime(endTime: Double) {
+    func endedTrimming(timeRange: CMTimeRange) {
         guard let item = player.currentItem else {
             return
         }
-        endTrimTime = CMTime(seconds: endTime * item.duration.seconds, preferredTimescale: item.duration.timescale)
+        startTrimTime = timeRange.start
+        endTrimTime = timeRange.end
         item.forwardPlaybackEndTime = endTrimTime
         seekToStartTrim()
-        play()
+        if wasPlaying {
+            play()
+        }
     }
     
-    func setStartTrimTime(startTime: Double) {
-        guard let item = player.currentItem else {
-            return
-        }
-        startTrimTime = CMTime(seconds: startTime * item.duration.seconds, preferredTimescale: item.duration.timescale)
-        seekToStartTrim()
-        play()
-    }
-    
-}
-
-
-extension AVAsset{
-    func videoSize()->CGSize{
-        let tracks = self.tracks(withMediaType: AVMediaType.video)
-        if (tracks.count > 0){
-            let videoTrack = tracks[0]
-            let size = videoTrack.naturalSize
-            let txf = videoTrack.preferredTransform
-            let realVidSize = size.applying(txf)
-            return realVidSize
-        }
-        return CGSize(width: 0, height: 0)
-    }
 }

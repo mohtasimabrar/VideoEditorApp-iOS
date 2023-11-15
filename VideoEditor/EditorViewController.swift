@@ -8,8 +8,15 @@
 import Foundation
 import UIKit
 import SDWebImage
+import AVFoundation
 
 class EditorViewController: UIViewController {
+    
+    var movie: Movie
+    
+    var asset: AVAsset {
+        movie.asset
+    }
     
     private lazy var playerButton: PlayerButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -31,34 +38,24 @@ class EditorViewController: UIViewController {
     private lazy var playerView: MoviePlayerView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
+        $0.endTrimTime = movie.asset.fullRange.end
         
         return $0
-    }(MoviePlayerView(movie: Movie(withURL: videoURL)))
+    }(MoviePlayerView(asset: movie.asset))
     
-    private lazy var timelineSlider: UISlider = {
+    private lazy var timelineControlView: VideoTrimmer = {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(self.seekSliderValueChanged(_:)), for: .valueChanged)
-        $0.addTarget(self, action: #selector(self.seekSliderTouchUp(_:)), for: .touchUpInside)
+        $0.minimumDuration = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        $0.asset = movie.asset
+        $0.addTarget(self, action: #selector(didBeginTrimming(_:)), for: VideoTrimmer.didBeginTrimming)
+        $0.addTarget(self, action: #selector(didEndTrimming(_:)), for: VideoTrimmer.didEndTrimming)
+        $0.addTarget(self, action: #selector(selectedRangeDidChanged(_:)), for: VideoTrimmer.selectedRangeChanged)
+        $0.addTarget(self, action: #selector(didBeginScrubbing(_:)), for: VideoTrimmer.didBeginScrubbing)
+        $0.addTarget(self, action: #selector(didEndScrubbing(_:)), for: VideoTrimmer.didEndScrubbing)
+        $0.addTarget(self, action: #selector(progressDidChanged(_:)), for: VideoTrimmer.progressChanged)
         
         return $0
-    }(UISlider())
-    
-    private lazy var startTrimSlider: UISlider = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(self.startTrimSliderValueChanged(_:)), for: .valueChanged)
-        $0.addTarget(self, action: #selector(self.startTrimSliderTouchUp(_:)), for: .touchUpInside)
-        
-        return $0
-    }(UISlider())
-    
-    private lazy var endTrimSlider: UISlider = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(self.endTrimSliderValueChanged(_:)), for: .valueChanged)
-        $0.addTarget(self, action: #selector(self.endTrimSliderTouchUp(_:)), for: .touchUpInside)
-        $0.value = 1.0
-        
-        return $0
-    }(UISlider())
+    }(VideoTrimmer())
     
     private lazy var trimTimeLabel: UILabel = {
         $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
@@ -80,28 +77,52 @@ class EditorViewController: UIViewController {
         return $0
     }(UILabel())
     
+    private lazy var stickerLabel: UILabel = {
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .light)
+        $0.textAlignment = .center
+        $0.numberOfLines = 1
+        $0.textColor = .darkGray
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = "Animated Stickers"
+        
+        return $0
+    }(UILabel())
+    
+    private lazy var scrollView: UIScrollView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.alwaysBounceHorizontal = true
+        $0.alwaysBounceVertical = false
+        $0.isDirectionalLockEnabled = true
+        $0.isScrollEnabled = true
+        $0.showsHorizontalScrollIndicator = false
+        
+        return $0
+    }(UIScrollView())
+    
     private lazy var gifStackView: UIStackView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.alignment = .leading
-        $0.distribution = .fillEqually
+        $0.distribution = .fillProportionally
         $0.axis = .horizontal
         $0.spacing = 5
+        
         return $0
     }(UIStackView())
     
-    private lazy var playbackTimer: Timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateSlider), userInfo: nil, repeats: true)
+    private var player: AVPlayer {
+        playerView.player
+    }
     
     var isScrubbing: Bool = false
     
-    var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF"]
+    var gifList = ["wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF", "wow.GIF", "hello.GIF", "handwash.GIF", "glasses.GIF", "laugh.GIF", "whatever.GIF"]
     
-    var videoURL: URL
     var durationOfVideo: Double = 0.0
     var startOfVideo: Double = 0.0
     var endOfVideo: Double = 0.0
     
     init(videoURL: URL) {
-        self.videoURL = videoURL
+        self.movie = Movie(withURL: videoURL)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -116,12 +137,18 @@ class EditorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Trim"
+        title = "TRIM"
+        self.navigationController?.navigationBar.tintColor = UIColor(hex: "#9B5AFA")
         setupView()
         trimTimeLabel.text = "\(startOfVideo) ~ \(endOfVideo)"
         durationLabel.text = "Maximum \(durationOfVideo) sec"
         playerButton.isEnabled = false
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Export", style: .plain, target: self, action: #selector(exportTapped))
+        
+        player.addPeriodicTimeObserver(forInterval: CMTime(value: 1, timescale: CMTimeScale(NSEC_PER_SEC)), queue: .main) { [weak self] time in
+            guard let self = self else {return}
+            self.timelineControlView.progress = time
+        }
         
         for (index,image) in gifList.enumerated() {
             let imageView = SDAnimatedImageView()
@@ -131,6 +158,7 @@ class EditorViewController: UIViewController {
             imageView.startAnimating()
             imageView.tag = index
             imageView.isUserInteractionEnabled = true
+            imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
             gifStackView.addArrangedSubview(imageView)
         }
         
@@ -142,44 +170,52 @@ class EditorViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.largeTitleDisplayMode = .never
+        let yourBackImage = UIImage(systemName: "xmark")
+        self.navigationController?.navigationBar.backIndicatorImage = yourBackImage
+        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = yourBackImage
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // Stop the video playback
         playerView.player.pause()
-        playbackTimer.invalidate()
     }
     
+//    func sampleMethod() {
+//        let mixComp = AVMutableComposition(url: videoURL)
+//        let originalDuration = mixComp.duration
+//        mixComp.removeTimeRange(CMTimeRange(start: .zero, end: CMTime(seconds: 5.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))))
+//        mixComp.removeTimeRange(CMTimeRange(start: CMTime(seconds: 10.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), end: originalDuration))
+//    }
+    
     private func setupView() {
-        [playerButton, playerView, timelineSlider, startTrimSlider, endTrimSlider, trimTimeLabel, durationLabel, cropButton, gifStackView].forEach { view.addSubview($0) }
+        [playerButton, playerView, timelineControlView, trimTimeLabel, durationLabel, cropButton, scrollView, stickerLabel].forEach { view.addSubview($0) }
+        
+        scrollView.addSubview(gifStackView)
         
         NSLayoutConstraint.activate([
             
-            gifStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            gifStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            gifStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
-            gifStackView.heightAnchor.constraint(equalToConstant: 50),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.heightAnchor.constraint(equalToConstant: 60),
             
-            endTrimSlider.bottomAnchor.constraint(equalTo: gifStackView.topAnchor, constant: -10),
-            endTrimSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            endTrimSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            endTrimSlider.heightAnchor.constraint(equalToConstant: 50),
+            gifStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            gifStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            gifStackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
             
-            startTrimSlider.bottomAnchor.constraint(equalTo: endTrimSlider.topAnchor, constant: -10),
-            startTrimSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            startTrimSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            startTrimSlider.heightAnchor.constraint(equalToConstant: 50),
+            stickerLabel.bottomAnchor.constraint(equalTo: scrollView.topAnchor, constant: -2),
+            stickerLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stickerLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             
-            timelineSlider.bottomAnchor.constraint(equalTo: startTrimSlider.topAnchor, constant: -10),
-            timelineSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            timelineSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            timelineSlider.heightAnchor.constraint(equalToConstant: 50),
+            timelineControlView.bottomAnchor.constraint(equalTo: stickerLabel.topAnchor, constant: -50),
+            timelineControlView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            timelineControlView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            timelineControlView.heightAnchor.constraint(equalToConstant: 60),
             
             playerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            playerButton.bottomAnchor.constraint(equalTo: timelineSlider.topAnchor, constant: -10),
-            playerButton.heightAnchor.constraint(equalToConstant: 50),
-            playerButton.widthAnchor.constraint(equalToConstant: 50),
+            playerButton.bottomAnchor.constraint(equalTo: timelineControlView.topAnchor, constant: -20),
+            playerButton.heightAnchor.constraint(equalToConstant: 40),
+            playerButton.widthAnchor.constraint(equalToConstant: 40),
             
             trimTimeLabel.topAnchor.constraint(equalTo: playerButton.topAnchor),
             trimTimeLabel.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor),
@@ -196,7 +232,7 @@ class EditorViewController: UIViewController {
             cropButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             cropButton.widthAnchor.constraint(equalToConstant: 50),
             
-            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerView.bottomAnchor.constraint(equalTo: playerButton.topAnchor, constant: -20),
@@ -227,16 +263,16 @@ class EditorViewController: UIViewController {
     }
     
     private func setLabels() {
-        trimTimeLabel.text = "\(Double(round(100 * startOfVideo)) / 100)s ~ \(Double(round(100 * endOfVideo)) / 100)s"
+        trimTimeLabel.text = "\(timelineControlView.selectedRange.start.displayString) ~ \(timelineControlView.selectedRange.end.displayString)s"
     }
     
 }
 
+//MARK: MoviePlayerViewDelegate methods
 extension EditorViewController: MoviePlayetViewDelegate {
     func playerDidBecomeReady() {
         self.playerView.playerStateChanged()
         self.playerButton.isEnabled = true
-        playbackTimer.fire()
         self.durationOfVideo = playerView.player.currentItem?.duration.seconds ?? 0.0
         self.endOfVideo = durationOfVideo
         setLabels()
@@ -244,43 +280,34 @@ extension EditorViewController: MoviePlayetViewDelegate {
     }
 }
 
-//MARK: Timeline methods
+//MARK: Timeline related methods
 extension EditorViewController {
-    @objc func updateSlider() {
-        if !isScrubbing {
-            let currentTime = playerView.player.currentTime().seconds
-            let duration = playerView.player.currentItem?.duration.seconds ?? 1.0
-            let progress = Float(currentTime / duration)
-            timelineSlider.setValue(progress, animated: true)
-        }
+    @objc private func didBeginTrimming(_ sender: VideoTrimmer) {
+        
+        playerView.startedTrimming()
     }
     
-    @objc func seekSliderValueChanged(_ sender:UISlider!) {
-        isScrubbing = true
-        playerView.seek(toSecond: Double(sender.value))
-    }
-    
-    @objc func seekSliderTouchUp(_ sender: UISlider) {
-        isScrubbing = false
-    }
-    
-    @objc func startTrimSliderValueChanged(_ sender:UISlider) {
-        startOfVideo = Double(sender.value) * durationOfVideo
+    @objc private func didEndTrimming(_ sender: VideoTrimmer) {
         setLabels()
-        playerView.trimStart(startTime: Double(sender.value))
+        
+        playerView.endedTrimming(timeRange: timelineControlView.selectedRange)
     }
     
-    @objc func endTrimSliderValueChanged(_ sender:UISlider) {
-        endOfVideo = Double(sender.value) * durationOfVideo
+    @objc private func selectedRangeDidChanged(_ sender: VideoTrimmer) {
         setLabels()
-        playerView.trimEnd(endTime: Double(sender.value))
+        playerView.trimming(timeRange: timelineControlView.selectedRange, state: timelineControlView.trimmingState)
     }
     
-    @objc func endTrimSliderTouchUp(_ sender: UISlider) {
-        playerView.setEndTrimTime(endTime: Double(sender.value))
+    @objc private func didBeginScrubbing(_ sender: VideoTrimmer) {
+        
     }
     
-    @objc func startTrimSliderTouchUp(_ sender: UISlider) {
-        playerView.setStartTrimTime(startTime: Double(sender.value))
+    @objc private func didEndScrubbing(_ sender: VideoTrimmer) {
+        
+    }
+    
+    @objc private func progressDidChanged(_ sender: VideoTrimmer) {
+        let time = CMTimeSubtract(timelineControlView.progress, timelineControlView.selectedRange.start)
+        playerView.seek(to: time)
     }
 }
